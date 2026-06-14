@@ -6,7 +6,8 @@ using ECommons;
 using ECommons.ExcelServices;
 using ECommons.Funding;
 using ECommons.GameFunctions;
-using ECommons.GameHelpers.LegacyPlayer;
+using ECommons.GameHelpers;
+// using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
 using ECommons.Interop;
 using ECommons.LanguageHelpers;
 using ECommons.SimpleGui;
@@ -125,7 +126,7 @@ internal unsafe partial class CGui : ConfigWindow
         {
             var ctspan = TimeSpan.FromMilliseconds(Environment.TickCount64 - P.CombatStarted);
             WindowName = $"Splatoon v{P.loader.splatoonVersion} | {GenericHelpers.GetTerritoryName(Svc.ClientState.TerritoryType).Replace("| ", "")} | {(P.CombatStarted == 0 ? "Not in combat".Loc() : $"{Loc("Combat")}: {ctspan.Minutes:D2}{(ctspan.Milliseconds < 500 ? ":" : " ")}{ctspan.Seconds:D2} ({(int)ctspan.TotalSeconds}.{ctspan.Milliseconds / 100:D1}s)")} | {Loc("Phase")}: {P.Phase} | {Loc("Scene")}: {*Scene.ActiveScene} | {Loc("Layouts")}: {P.LayoutAmount} | {Loc("Elements")}: {P.ElementAmount} | {Utils.GetPlayerPositionXZY().X:F1}, {Utils.GetPlayerPositionXZY().Y:F1}###Splatoon";
-            this.SplatoonButton.IconColor = Splatoon.P.Draw ? null : global::System.Environment.TickCount64 % 1000 > 500 ? global::ECommons.ImGuiMethods.EColor.RedBright : null;
+            // this.SplatoonButton.IconColor = ...; // TODO(api12): Window.TitleBarButton.IconColor is API15-only
             this.PhaseButton.Icon = (FontAwesomeIcon)(P.Phase == 1 ? FontAwesomeIcon.AngleRight : P.Phase == 2 ? FontAwesomeIcon.AngleDoubleRight : FontAwesomeIcon.ExclamationCircle);
         }
         catch(Exception e)
@@ -156,29 +157,18 @@ internal unsafe partial class CGui : ConfigWindow
                     if(Svc.Condition[ConditionFlag.DutyRecorderPlayback])
                     {
                         ImGui.SetNextItemWidth(100f);
-                        var col = !BasePlayer.AddressEquals(Svc.Objects.LocalPlayer);
-                        if(col)
-                        {
-                            ImGui.PushStyleColor(ImGuiCol.Text, EColor.GreenBright);
-                        }
-
+                        var col = !BasePlayer.AddressEquals(Svc.ClientState.LocalPlayer);
+                        if(col) ImGui.PushStyleColor(ImGuiCol.Text, EColor.GreenBright);
                         if(ImGui.BeginCombo("##bpo", BasePlayerOverride == "" ? "No Override" : BasePlayerOverride, ImGuiComboFlags.HeightLarge))
                         {
-                            if(col)
+                            if(col) ImGui.PopStyleColor();
+                            if(ImGui.Selectable("No Override", BasePlayerOverride == "")) BasePlayerOverride = "";
+                            // porting-note: walk-back ECommons GetJob() is on Lumina ClassJob, not IPlayerCharacter — go via ClassJob.ValueNullable.
+                            foreach(var x in Svc.Objects.OfType<IPlayerCharacter>().OrderBy(x => x.GetRole()).ThenBy(x => (x.ClassJob.ValueNullable?.GetJob() ?? default).IsRangedDps()).ThenBy(x => (x.ClassJob.ValueNullable?.GetJob() ?? default).IsMagicalRangedDps()))
                             {
-                                ImGui.PopStyleColor();
-                            }
-
-                            if(ImGui.Selectable("No Override", BasePlayerOverride == ""))
-                            {
-                                BasePlayerOverride = "";
-                            }
-
-                            foreach(var x in Svc.Objects.OfType<IPlayerCharacter>().OrderBy(x => x.GetRole()).ThenBy(x => x.GetJob().IsRangedDps()).ThenBy(x => x.GetJob().IsMagicalRangedDps()))
-                            {
-                                if(ThreadLoadImageHandler.TryGetIconTextureWrap(x.GetJob().GetIcon(), false, out var tex))
+                                if(x.ClassJob.ValueNullable is { } cj && ThreadLoadImageHandler.TryGetIconTextureWrap(cj.GetJob().GetIcon(), false, out var tex))
                                 {
-                                    ImGui.Image(tex.Handle, new(ImGui.GetTextLineHeight()));
+                                    ImGui.Image(tex.ImGuiHandle, new(ImGui.GetTextLineHeight()));
                                     ImGui.SameLine();
                                 }
                                 if(ImGui.Selectable($"{x.GetNameWithWorld()}", x.GetNameWithWorld() == BasePlayerOverride))
@@ -190,10 +180,7 @@ internal unsafe partial class CGui : ConfigWindow
                         }
                         else
                         {
-                            if(col)
-                            {
-                                ImGui.PopStyleColor();
-                            }
+                            if(col) ImGui.PopStyleColor();
                         }
                         ImGui.SameLine();
                     }

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
@@ -202,7 +202,7 @@ public unsafe class P3_Earthquake : SplatoonScript<P3_Earthquake.Config>
     private string _instruction = "";
 
     public override HashSet<uint>? ValidTerritories { get; } = [TerritoryDancingMadUltimate];
-    public override Metadata Metadata => new(34, "Garume");
+    public override Metadata Metadata => new(33, "Garume");
 
     public override void OnSetup()
     {
@@ -635,31 +635,6 @@ public unsafe class P3_Earthquake : SplatoonScript<P3_Earthquake.Config>
             C.AssignmentMode = (AssignmentMode)Math.Clamp(mode, 0, AssignmentModeNames.Length - 1);
         ImGui.TextWrapped(AssignmentModeDescription.Get());
 
-        if (C.AssignmentMode is AssignmentMode.FixedRoleAccretion)
-		{
-            ImGui.TextUnformatted("DPS/Support/Accretion spot assignment");
-            ImGui.Indent();
-            var dps = (int)C.DpsMarker;
-            if (DrawCombo("DPS", ref dps, ["A", "B", "C", "D"], 180f))
-                C.DpsMarker = (MapMarker)dps;
-            var support = (int)C.SupportMarker;
-            if (DrawCombo("Support", ref support, ["A", "B", "C", "D"], 180f))
-                C.SupportMarker = (MapMarker)support;
-            var accretion = (int)C.AccretionMarker;
-            if (DrawCombo("Accretion", ref accretion, ["A", "B", "C", "D"], 180f))
-                C.AccretionMarker = (MapMarker)accretion;
-            var fallback = (int)C.FallbackMarker;
-            if (DrawCombo("Fallback", ref fallback, ["A", "B", "C", "D"], 180f))
-                C.FallbackMarker = (MapMarker)fallback;
-
-            if (C.DpsMarker == C.SupportMarker || C.DpsMarker == C.AccretionMarker || C.DpsMarker == C.FallbackMarker ||
-                C.SupportMarker == C.AccretionMarker || C.SupportMarker == C.FallbackMarker ||
-                C.AccretionMarker == C.FallbackMarker)
-                ImGui.TextWrapped("Warning: DPS, Support, Accretion, and Fallback markers should be unique.");
-
-            ImGui.Unindent();
-		}
-
         if (C.AssignmentMode is AssignmentMode.Priority or AssignmentMode.MarkerThenPriority)
         {
             if (ImGui.Button("Apply Meow static TN priority"))
@@ -914,7 +889,7 @@ public unsafe class P3_Earthquake : SplatoonScript<P3_Earthquake.Config>
         var isAccretion = _accretionPlayers.Contains(player.EntityId);
         var isSupport = player.GetRole() is CombatRole.Tank or CombatRole.Healer;
         var rank = fixedSpots
-            ? isAccretion ? (int)C.AccretionMarker : isSupport ? (int)C.SupportMarker : (int)C.DpsMarker
+            ? isAccretion ? 2 : isSupport ? 0 : 1
             : isAccretion ? 2 : isSupport ? 1 : 0;
         slot = SlotFromRank(group, rank);
         return slot != Slot.None;
@@ -1722,7 +1697,7 @@ public unsafe class P3_Earthquake : SplatoonScript<P3_Earthquake.Config>
         var battleLine = DescribeBattleState(battle);
         var npcLine = npc == null ? "" : $" npcKind={npc.BattleNpcKind}";
 
-        return $"idx={objectListIndex} id={obj.EntityId:X8} go={goid:X} data={obj.DataId} base={obj.BaseId} kind={obj.ObjectKind} sub={ptr->SubKind}{npcLine} owner={obj.OwnerId:X} npcId={ptr->GetNameId()} namePlate={ptr->NamePlateIconId} layout={ptr->LayoutId} dead={ptr->IsDead()} pos=({pos.X:F2},{pos.Z:F2}) r={distance:F2} angle={angle:F1} rot={rotation:F1} hitbox={obj.HitboxRadius:F1} tar={ptr->GetIsTargetable()} vis={visible} targetStatus={ptr->TargetStatus} render={ptr->RenderFlags} vfxScale={ptr->VfxScale:F2} draw={(nint)ptr->DrawObject:X}{characterLine}{battleLine}";
+        return $"idx={objectListIndex} id={obj.EntityId:X8} go={goid:X} data={obj.DataId} base={obj.DataId} kind={obj.ObjectKind} sub={ptr->SubKind}{npcLine} owner={obj.OwnerId:X} npcId={ptr->GetNameId()} namePlate={ptr->NamePlateIconId} layout={ptr->LayoutId} dead={ptr->IsDead()} pos=({pos.X:F2},{pos.Z:F2}) r={distance:F2} angle={angle:F1} rot={rotation:F1} hitbox={obj.HitboxRadius:F1} tar={ptr->GetIsTargetable()} vis={visible} targetStatus={ptr->TargetStatus} render={ptr->RenderFlags} vfxScale={ptr->VfxScale:F2} draw={(nint)ptr->DrawObject:X}{characterLine}{battleLine}";
     }
 
     private static int ObjectListIndex(uint entityId)
@@ -1847,7 +1822,7 @@ public unsafe class P3_Earthquake : SplatoonScript<P3_Earthquake.Config>
         var preferred = buckets[rank];
         if (_tetherTargets.ContainsKey(preferred))
             return preferred;
-        var fallback = buckets[(int)C.FallbackMarker];
+        var fallback = buckets[3];
         return _tetherTargets.ContainsKey(fallback) ? fallback : -1;
     }
 
@@ -2374,7 +2349,6 @@ public unsafe class P3_Earthquake : SplatoonScript<P3_Earthquake.Config>
     public enum LineBaitDirection { Clockwise, Counterclockwise }
     public enum BlackHoleSourceOrder { ClockwiseFromNorth = 0, CounterclockwiseFromNorth = 1 }
     public enum BlackHoleOrderAnchor { KefkaPosition = 0, ArenaNorth = 1 }
-    public enum MapMarker { A = 0, B = 1, C = 2, D = 3 }
 
     private readonly record struct LiveTetherEntry(ushort Id, byte Progress, uint Target);
 
@@ -2426,10 +2400,6 @@ public unsafe class P3_Earthquake : SplatoonScript<P3_Earthquake.Config>
         public bool ShowFinalTowerText = true;
         public InternationalString FinalMoveText = new() { En = "{0}: spread and keep moving", Jp = "{0}: 散開して動く" };
         public bool ShowFinalMoveText = true;
-        public MapMarker DpsMarker = MapMarker.B;
-        public MapMarker SupportMarker = MapMarker.A;
-        public MapMarker AccretionMarker = MapMarker.C;
-        public MapMarker FallbackMarker = MapMarker.D;
 
         public void EnsureDefaults()
         {

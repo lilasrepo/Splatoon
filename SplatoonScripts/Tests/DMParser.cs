@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.Text.SeStringHandling.Payloads;
+using Dalamud.Game.Text.SeStringHandling.Payloads;
 using ECommons.DalamudServices;
 using ECommons.Logging;
 using Splatoon.SplatoonScripting;
@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 using ECommons.DalamudServices.Legacy;
-using Dalamud.Game.Chat;
 
 namespace SplatoonScriptsOfficial.Tests;
 public class DMParser : SplatoonScript

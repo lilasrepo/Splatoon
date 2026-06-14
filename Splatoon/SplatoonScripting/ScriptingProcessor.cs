@@ -1,8 +1,8 @@
-﻿using Dalamud.Game.ClientState.Objects.SubKinds;
+using Dalamud.Game.ClientState.Objects.SubKinds;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
-using ECommons.GameHelpers.LegacyPlayer;
+// using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
 using ECommons.Hooks;
 using ECommons.Hooks.ActionEffectTypes;
 using ECommons.LanguageHelpers;
@@ -107,6 +107,7 @@ internal unsafe static partial class ScriptingProcessor
 
     internal static void BlockingBeginUpdate(bool force = false)
     {
+        if(P == null || P.Disposed) return; // porting-note(api12): runs on the compiler background thread; guard against disposal race (NRE storm on P.HttpClient/P.Config otherwise)
         if(UpdateCompleted || force)
         {
             Blacklist = ImmutableList<BlacklistData>.Empty;
@@ -155,6 +156,7 @@ internal unsafe static partial class ScriptingProcessor
             }).Wait();
             UpdateCompleted = true;
 
+            if(P == null || P.Disposed) return; // porting-note(api12): disposal can land during the blacklist .Wait() above; re-check before the update-list phase derefs P.Config/P.HttpClient (NRE at line 161 otherwise)
             try
             {
                 var noUpdate = P.Config.NoAutoUpdateScript.ToImmutableList();
@@ -331,6 +333,7 @@ internal unsafe static partial class ScriptingProcessor
                     }
                     while(idleCount < 10)
                     {
+                        if(P == null || P.Disposed) break; // porting-note(api12): stop dequeuing once disposed; prevents P.Config NRE storm (one per queued script) on shutdown race
                         if(LoadScriptQueue.TryDequeue(out var result))
                         {
                             try
@@ -496,6 +499,7 @@ internal unsafe static partial class ScriptingProcessor
 
     internal static void OpenUpdatePopupIfNeeded()
     {
+        if(P == null || P.Disposed) return; // porting-note(api12): runs on the compiler background thread; guard against disposal race (NRE on P.ScriptUpdateWindow otherwise)
         try
         {
             PluginLog.Information($"Script updates now finished {P.ScriptUpdateWindow.FailedScripts_Count()}/{P.ScriptUpdateWindow.UpdatedScripts_Count()}");
@@ -814,7 +818,7 @@ internal unsafe static partial class ScriptingProcessor
             var printed = false;
             foreach(var effect in set.TargetEffects)
             {
-                if(effect.TargetID != 0 && Svc.Objects.TryGetFirst(x => x.ObjectId == (uint)effect.TargetID, out var effectTarget))
+                if(effect.TargetID != 0 && Svc.Objects.TryGetFirst(x => x.EntityId == (uint)effect.TargetID, out var effectTarget))
                 {
                     printed = true;
                     string targetText;

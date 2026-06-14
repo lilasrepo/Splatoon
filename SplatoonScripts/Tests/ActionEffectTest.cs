@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Objects.SubKinds;
+using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
@@ -6,7 +6,7 @@ using ECommons.GameHelpers;
 using ECommons.Hooks.ActionEffectTypes;
 using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Splatoon.SplatoonScripting;
 using System;
 using System.Collections.Generic;

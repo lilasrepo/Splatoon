@@ -1,4 +1,4 @@
-﻿using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons;
@@ -259,7 +259,7 @@ public unsafe class LittleLadiesDay2026AutoFarm : SplatoonScript
                || Svc.Condition[ConditionFlag.PreparingToCraft]
                || Svc.Condition[ConditionFlag.Fishing]
                || Svc.Condition[ConditionFlag.UsingHousingFunctions]
-               || Svc.Objects.LocalPlayer?.IsTargetable != true;
+               || Svc.ClientState.LocalPlayer?.IsTargetable != true;
     }
 
     Config C => Controller.GetConfig<Config>();

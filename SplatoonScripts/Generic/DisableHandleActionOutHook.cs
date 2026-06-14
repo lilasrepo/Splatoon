@@ -1,10 +1,10 @@
-﻿using ECommons;
+using ECommons;
 using ECommons.DalamudServices;
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
 using ECommons.Reflection;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Splatoon.SplatoonScripting;
 using System;
 using System.Collections.Generic;

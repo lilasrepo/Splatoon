@@ -13,7 +13,7 @@ using ECommons.Hooks.ActionEffectTypes;
 using ECommons.MathHelpers;
 using ECommons.Throttlers;
 using ECommons.GameHelpers;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Splatoon;
 using Splatoon.SplatoonScripting;
 

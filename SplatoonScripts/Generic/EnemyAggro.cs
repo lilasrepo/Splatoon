@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Objects.SubKinds;
+using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Hooking;
 using Dalamud.Interface.Components;
 using ECommons;
@@ -9,7 +9,7 @@ using ECommons.GameHelpers;
 using ECommons.ImGuiMethods;
 using ECommons.LanguageHelpers;
 using ECommons.MathHelpers;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Splatoon;
 using Splatoon.SplatoonScripting;
 using System;

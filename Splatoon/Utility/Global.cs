@@ -1,4 +1,4 @@
-﻿global using Dalamud.Bindings.ImGui;
+﻿global using ImGuiNET;
 global using Dalamud.Game.ClientState.Objects.Types;
 global using Dalamud.Interface;
 global using Dalamud.Interface.Utility;
@@ -24,5 +24,5 @@ global using static ECommons.GenericHelpers;
 global using static ECommons.LanguageHelpers.Localization;
 global using static Splatoon.Splatoon;
 global using static Splatoon.Utility.Shortcuts;
-global using Player = ECommons.GameHelpers.LegacyPlayer.Player;
+global using Player = ECommons.GameHelpers.Player; // TODO(api12): walk-back ECommons exposes Player directly under GameHelpers
 global using ECommons.GameFunctions.VirtualTableClassifier;

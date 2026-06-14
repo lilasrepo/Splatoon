@@ -39,10 +39,6 @@ M:Dalamud.Plugin.Services.IPlayerState.GetClassJobLevel;IPlayerState usage disco
 M:Dalamud.Plugin.Services.IPlayerState.GetClassJobExperience;IPlayerState usage discouraged because of poor implementation. You can remove a method or property from BannedSymbols.txt if there is no other sane way to obtain desired data.
 M:Dalamud.Plugin.Services.IPlayerState.GetDesynthesisLevel;IPlayerState usage discouraged because of poor implementation. You can remove a method or property from BannedSymbols.txt if there is no other sane way to obtain desired data.
 
-P:Dalamud.Game.ClientState.Objects.Types.IBattleChara.IsCastInterruptible
-P:Dalamud.Game.ClientState.Objects.Types.IBattleChara.CastInfo.ActionType
-P:Dalamud.Game.ClientState.Objects.Types.IBattleChara.CastInfo.ActionId
-P:Dalamud.Game.ClientState.Objects.Types.IBattleChara.CastTargetObjectId
-P:Dalamud.Game.ClientState.Objects.Types.IBattleChara.CurrentCastTime
-P:Dalamud.Game.ClientState.Objects.Types.IBattleChara.BaseCastTime
-P:Dalamud.Game.ClientState.Objects.Types.IBattleChara.TotalCastTime
+# porting-note: API12 IBattleChara has no .CastInfo wrapper — we MUST use the direct
+# CurrentCastTime / TotalCastTime / CastActionId / CastActionType properties. HEAD bans them
+# in favor of .CastInfo, but that's not available here. Bans removed for API12 build.

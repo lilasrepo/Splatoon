@@ -1,11 +1,11 @@
-﻿using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Interface.Windowing;
 using ECommons.ChatMethods;
 using ECommons.ExcelServices;
 using ECommons.GameHelpers;
-using ECommons.GameHelpers.LegacyPlayer;
+// using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
 using ECommons.ImGuiMethods.TerritorySelection;
 using ECommons.LanguageHelpers;
 using ECommons.PartyFunctions;

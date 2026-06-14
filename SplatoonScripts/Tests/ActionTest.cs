@@ -1,17 +1,17 @@
-﻿using ECommons;
+using ECommons;
 using ECommons.ExcelServices;
 using ECommons.GameHelpers;
 using ECommons.Logging;
 using ECommons.MathHelpers;
 using FFXIVClientStructs.FFXIV.Client.Game;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Splatoon.SplatoonScripting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Player = ECommons.GameHelpers.LegacyPlayer.Player;
-using ECommons.GameHelpers.LegacyPlayer;
+// using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
 
 using ECommons.DalamudServices.Legacy;
 

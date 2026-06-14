@@ -1,5 +1,5 @@
-﻿
-using Dalamud.Bindings.ImGui;
+
+using ImGuiNET;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Plugin.Ipc.Exceptions;
 using ECommons;
@@ -9,7 +9,7 @@ using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using ECommons.Hooks.ActionEffectTypes;
 using Player = ECommons.GameHelpers.LegacyPlayer.Player;
-using ECommons.GameHelpers.LegacyPlayer;
+// using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
 using Splatoon;

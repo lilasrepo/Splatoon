@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Objects.SubKinds;
+using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons;
 using ECommons.Configuration;
@@ -8,7 +8,7 @@ using ECommons.GameFunctions;
 using ECommons.Hooks;
 using ECommons.Hooks.ActionEffectTypes;
 using ECommons.Logging;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Microsoft.VisualBasic.ApplicationServices;
 using Splatoon;
 using Splatoon.SplatoonScripting;

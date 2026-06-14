@@ -1,5 +1,5 @@
-﻿using ECommons.GameHelpers;
-using ECommons.GameHelpers.LegacyPlayer;
+using ECommons.GameHelpers;
+// using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;

@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Objects.SubKinds;
+using Dalamud.Game.ClientState.Objects.SubKinds;
 using ECommons;
 using ECommons.Configuration;
 using ECommons.ExcelServices;
@@ -9,7 +9,7 @@ using ECommons.ImGuiMethods;
 using ECommons.Logging;
 using ECommons.MathHelpers;
 using FFXIVClientStructs.FFXIV.Client.Game;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Splatoon;
 using Splatoon.SplatoonScripting;
 using System;
@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Player = ECommons.GameHelpers.LegacyPlayer.Player;
-using ECommons.GameHelpers.LegacyPlayer;
+// using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
 
 using ECommons.DalamudServices.Legacy;
 

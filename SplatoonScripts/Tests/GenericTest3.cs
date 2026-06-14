@@ -1,5 +1,5 @@
-﻿using ECommons.Logging;
-using Dalamud.Bindings.ImGui;
+using ECommons.Logging;
+using ImGuiNET;
 using Splatoon.SplatoonScripting;
 using System;
 using System.Collections.Generic;

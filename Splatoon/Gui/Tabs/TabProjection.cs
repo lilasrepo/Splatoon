@@ -192,7 +192,7 @@ public static unsafe class TabProjection
                 ImGuiEx.SimpleTableTextColumns(
                     ExcelActionHelper.GetActionName(x.Action, true),
                     ExcelTerritoryHelper.GetName(x.Territory, true),
-                    $"{BNpcName.GetRef(x.NameId).ValueNullable?.Singular.ToString()} #{x.NameId}",
+                    $"{Svc.Data.GetExcelSheet<BNpcName>().GetRowOrDefault(x.NameId)?.Singular.ToString()} #{x.NameId}",
                     $"{x.DataId}",
                     $"{x.ModelId}");
                 ImGui.TableNextColumn();

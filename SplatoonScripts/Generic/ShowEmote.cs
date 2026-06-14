@@ -1,4 +1,4 @@
-﻿using Dalamud.Hooking;
+using Dalamud.Hooking;
 using Dalamud.Utility.Signatures;
 using ECommons;
 using ECommons.Configuration;
@@ -6,7 +6,7 @@ using ECommons.DalamudServices;
 using ECommons.DalamudServices.Legacy;
 using ECommons.GameFunctions;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Lumina.Excel.Sheets;
 using Splatoon.SplatoonScripting;
 using System;

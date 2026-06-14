@@ -1,6 +1,6 @@
-﻿using ECommons.ExcelServices;
+using ECommons.ExcelServices;
 using ECommons.GameHelpers;
-using ECommons.GameHelpers.LegacyPlayer;
+// using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
 using ECommons.LanguageHelpers;
 using ECommons.MathHelpers;
 using NightmareUI;

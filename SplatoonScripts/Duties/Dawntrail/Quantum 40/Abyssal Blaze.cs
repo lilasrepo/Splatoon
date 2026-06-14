@@ -1,4 +1,4 @@
-﻿using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons;
 using ECommons.Configuration;
@@ -124,7 +124,7 @@ public unsafe class Abyssal_Blaze : SplatoonScript
             if(_firstCastedBlaze == CastAbyssalBlaze.None) return;
             var obj = Svc.Objects.Where(o => o.Address == newObjectPtr).FirstOrDefault();
             if(obj == null) return;
-            if(obj.BaseId == AbyssalBlazeNpcId)
+            if(obj.DataId == AbyssalBlazeNpcId)
             {
                 if(_secondCastedBlaze == CastAbyssalBlaze.None)
                 {

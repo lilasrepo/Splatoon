@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using ECommons.Automation;
@@ -1237,7 +1237,7 @@ public class P2_Forsaken_beta : SplatoonScript<P2_Forsaken_beta.Config>
         ImGui.TextUnformatted($"Wave 4 self marker: {(_wave4SelfMarkerHandled ? "handled" : "pending")} {(_lastWave4SelfMarkerState.Length == 0 ? "" : _lastWave4SelfMarkerState)}");
 
         var overrideName = global::Splatoon.Splatoon.BasePlayerOverride;
-        var local = global::ECommons.DalamudServices.Svc.Objects.LocalPlayer;
+        var local = global::ECommons.DalamudServices.Svc.ClientState.LocalPlayer;
         ImGui.TextUnformatted($"BasePlayer override: {(string.IsNullOrEmpty(overrideName) ? "none" : overrideName)}");
         ImGui.TextUnformatted(local != null
             ? $"LocalPlayer: {DebugIdentity(local)}"

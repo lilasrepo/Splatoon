@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Game.ClientState.Objects.Types;
 using ECommons;
 using ECommons.Configuration;
 using ECommons.DalamudServices;
@@ -10,7 +10,7 @@ using ECommons.Logging;
 using ECommons.MathHelpers;
 using ECommons.Reflection;
 using ECommons.Schedulers;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Splatoon.Memory;
 using Splatoon.SplatoonScripting;

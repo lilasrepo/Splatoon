@@ -1,4 +1,4 @@
-﻿using ECommons.CSExtensions;
+// using ECommons.CSExtensions; // TODO(api12): walk-back ECommons lacks CSExtensions namespace
 using ECommons.Hooks;
 using FFXIVClientStructs.FFXIV.Client.Game.Event;
 using FFXIVClientStructs.FFXIV.Client.Game.InstanceContent;
@@ -62,7 +62,7 @@ internal static unsafe class TabMapEffect
                     SavedEffects.Clear();
                 }
             });
-            var tt = TerritoryType.GetRef(Player.Territory).ValueNullable?.Bg.ToString() ?? "";
+            var tt = Svc.Data.GetExcelSheet<TerritoryType>().GetRowOrDefault(Player.Territory)?.Bg.ToString() ?? "";
             if(ImGuiEx.BeginDefaultTable("Effects", ["Effect ID", "State", "Last call", "Call"]))
             {
                 for(var i = 0; i < cd->MapEffects->Items.Length; i++)
@@ -97,7 +97,7 @@ internal static unsafe class TabMapEffect
                         var dict = P.Config.MapEffectNames.GetOrCreate(tt);
                         var name = dict.SafeSelect((uint)i, "");
                         ImGui.SetNextItemWidth(200f);
-                        if(ImGui.InputTextWithHint("##NameEff", $"Name effect {i}", ref name))
+                        if(ImGui.InputTextWithHint("##NameEff", $"Name effect {i}", ref name, 200))
                         {
                             dict[(uint)i] = name;
                         }

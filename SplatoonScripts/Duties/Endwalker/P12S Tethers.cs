@@ -1,8 +1,8 @@
-﻿using ECommons;
+using ECommons;
 using ECommons.Configuration;
 using ECommons.DalamudServices;
 using ECommons.MathHelpers;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Splatoon.SplatoonScripting;
 using System;
 using System.Collections.Generic;

@@ -1,9 +1,10 @@
-﻿using ECommons.Reflection;
+using ECommons.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 using System.Reflection;
 using System.Runtime.Loader;
+using System.Text.RegularExpressions;
 
 namespace Splatoon.SplatoonScripting;
 
@@ -12,14 +13,17 @@ internal class Compiler
     internal static Assembly Load(byte[] assembly, byte[] pdb)
     {
         PluginLog.Debug($"Beginning assembly load");
+        // porting-note: HEAD reflects into the plugin's "loader" field and casts it as AssemblyLoadContext.
+        // In API12 the field type is Dalamud.Plugin.Internal.Loader.PluginLoader, NOT an AssemblyLoadContext —
+        // the cast throws. Walk-back path (used here) uses the AssemblyLoadContext that DalamudReflector
+        // already returns as the 2nd tuple element, which works on both API15 and API12.
         if(DalamudReflector.TryGetLocalPlugin(out var instance, out var context, out var type))
         {
             using var stream = new MemoryStream(assembly);
             using var streamPdb = new MemoryStream(pdb);
             try
             {
-                var a = context.LoadFromStream(stream, streamPdb);
-                return a;
+                return context.LoadFromStream(stream, streamPdb);
             }
             catch(Exception e)
             {
@@ -57,6 +61,7 @@ internal class Compiler
             }
             Svc.Framework.RunOnFrameworkThread(() =>
             {
+                if(P == null || P.Disposed || P.ScriptUpdateWindow == null) return; // porting-note(api12): runs on the compiler background thread via .Wait(); guard against disposal race (P/P.ScriptUpdateWindow null mid-compile NREs, rethrown wrapped by .Wait())
                 P.ScriptUpdateWindow.FailedScripts_Add(path);
             }).Wait();
 
@@ -73,6 +78,10 @@ internal class Compiler
 
     private static CSharpCompilation GenerateCode(string sourceCode, string identity = "Script")
     {
+        // porting-note: TC API12 build - community scripts are written against API15. Rewrite the API15
+        // surface (Bindings.ImGui, ObjectId, IStatus, LegacyPlayer) to API12 equivalents before compile.
+        sourceCode = PatchScriptForApi12(sourceCode);
+
         var codeString = SourceText.From(sourceCode);
         var options = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview);
 
@@ -89,5 +98,53 @@ internal class Compiler
                 optimizationLevel: OptimizationLevel.Release,
                 assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default,
                 allowUnsafe: true));
+    }
+
+    // porting-note: rewrites HEAD-style (API15) script source to compile against TC API12 references.
+    // Invoked from GenerateCode before SyntaxTree parsing. Only string-level surgery - no Roslyn analysis.
+    private static string PatchScriptForApi12(string src)
+    {
+        // Namespace renames (using directives)
+        src = Regex.Replace(src, @"\busing\s+Dalamud\.Bindings\.ImGui\s*;", "using ImGuiNET;");
+        src = Regex.Replace(src, @"\busing\s+static\s+Dalamud\.Bindings\.ImGui\.ImGui\s*;", "using static ImGuiNET.ImGui;");
+        src = Regex.Replace(src, @"\busing\s+ECommons\.GameHelpers\.LegacyPlayer\s*;", "using ECommons.GameHelpers;");
+        src = Regex.Replace(src, @"\busing\s+ECommons\.CSExtensions\s*;", "");
+
+        // Fully-qualified type references
+        src = src.Replace("Dalamud.Bindings.ImGui.", "ImGuiNET.");
+        src = src.Replace("ECommons.GameHelpers.LegacyPlayer.Player", "ECommons.GameHelpers.Player");
+
+        // IPlayerCharacter / IBattleNpc / IGameObject .ObjectId -> .EntityId, BUT preserve FFXIVClientStructs
+        // GameObjectId struct field accesses (GameObjectId has .ObjectId, not .EntityId — renaming breaks compile):
+        //  (a) .TargetId.ObjectId / .<X>Id.ObjectId            — struct field whose owner name ends in Id
+        //  (b) MarkingController.Markers[N].ObjectId           — indexer returns a GameObjectId struct
+        //  (c) v.ObjectId where v.ObjectId.GetObject() exists  — v is a GameObjectId local (e.g. `var x = markers[i]`);
+        //                                                         you call GetObject() on the uint id, never on an IGameObject
+        // Also skip entirely when a script defines its own `public uint/ulong ObjectId;` field (renaming would break it).
+        var scriptDefinesObjectIdField = Regex.IsMatch(src, @"\bpublic\s+(uint|ulong)\s+ObjectId\b");
+        if(!scriptDefinesObjectIdField)
+        {
+            src = Regex.Replace(src, @"(\.[A-Z][A-Za-z0-9_]*Id)\.ObjectId\b", "$1__PROTECTED__OBJECTID__"); // (a)
+            src = Regex.Replace(src, @"(Markers\[[^\]]+\])\.ObjectId\b", "$1__PROTECTED__OBJECTID__");       // (b)
+            // (c) runs after (a)/(b): any bare `v.ObjectId.GetObject()` still present means v is a GameObjectId,
+            //     so protect every .ObjectId on that variable (matches MatchCollection are taken against the pre-loop src).
+            foreach(Match m in Regex.Matches(src, @"\b(\w+)\.ObjectId\.GetObject\(\)"))
+            {
+                var v = m.Groups[1].Value;
+                src = Regex.Replace(src, @"\b" + Regex.Escape(v) + @"\.ObjectId\b", v + "__PROTECTED__OBJECTID__");
+            }
+            src = Regex.Replace(src, @"\.ObjectId\b", ".EntityId");
+            src = src.Replace("__PROTECTED__OBJECTID__", ".ObjectId");
+        }
+
+        // IStatus -> Dalamud Status (chrome class)
+        src = Regex.Replace(src, @"\bIStatus\b", "Dalamud.Game.ClientState.Statuses.Status");
+
+        // FFXIVClientStructs MarkingController.Markers[X] returns GameObjectId struct in API12,
+        // but HEAD scripts compare it directly to uint EntityId — requires .ObjectId deref.
+        src = Regex.Replace(src, @"(->Markers\[[^\]]+\])\s*==\s*", "$1.ObjectId == ");
+        src = Regex.Replace(src, @"\s*==\s*(\w[\w\.]*->Markers\[[^\]]+\])", " == $1.ObjectId");
+
+        return src;
     }
 }

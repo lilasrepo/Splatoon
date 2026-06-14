@@ -5,7 +5,7 @@ using ECommons.DalamudServices;
 using ECommons.ImGuiMethods;
 using ECommons.MathHelpers;
 using ECommons.Schedulers;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Splatoon;
 using Splatoon.Memory;
 using Splatoon.SplatoonScripting;

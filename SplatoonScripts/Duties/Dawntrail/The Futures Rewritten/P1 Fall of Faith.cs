@@ -9,7 +9,7 @@ using ECommons.Logging;
 using ECommons.MathHelpers;
 using ECommons.PartyFunctions;
 using FFXIVClientStructs.FFXIV.Client.UI.Info;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Splatoon;
 using Splatoon.SplatoonScripting;
 using Splatoon.SplatoonScripting.Priority;

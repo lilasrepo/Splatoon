@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -15,7 +15,7 @@ using Splatoon.Memory;
 using Splatoon.SplatoonScripting;
 using Splatoon.SplatoonScripting.Priority;
 using static Splatoon.Splatoon;
-using static Dalamud.Bindings.ImGui.ImGui;
+using static ImGuiNET.ImGui;
 
 using ECommons.DalamudServices.Legacy;
 
@@ -52,11 +52,11 @@ public class Another_Merchants_Take_B1_Sunken_Treasure : SplatoonScript
         Controller.Schedule(() =>
         {
             var obj = Svc.Objects.FirstOrDefault(x => x.Address == newObjectPtr);
-            if (obj == null || (obj.BaseId != 2015004 && obj.BaseId != 2015005)) return;
+            if (obj == null || (obj.DataId != 2015004 && obj.DataId != 2015005)) return;
             _objectDataList.Add(new ObjectData
             {
                 EntityId = obj.EntityId,
-                BaseId = obj.BaseId,
+                BaseId = obj.DataId,
                 Position = obj.Position,
                 IsBroke = false,
             });
@@ -94,8 +94,8 @@ public class Another_Merchants_Take_B1_Sunken_Treasure : SplatoonScript
             if (!obj.IsBroke) continue;
             if (Controller.TryGetElementByName($"aoe{index}", out var e))
             {
-                e.radius = obj.BaseId == 2015004 ? 18f : 4f;
-                e.Donut = obj.BaseId == 2015004 ? 0f : 16f;
+                e.radius = obj.DataId == 2015004 ? 18f : 4f;
+                e.Donut = obj.DataId == 2015004 ? 0f : 16f;
                 e.Enabled = true;
                 e.SetRefPosition(obj.Position);
             }
@@ -116,7 +116,7 @@ public class Another_Merchants_Take_B1_Sunken_Treasure : SplatoonScript
         // Debug
         if (!ImGuiEx.CollapsingHeader("Debug")) return;
         foreach (var obj in _objectDataList)
-            ImGuiEx.Text($"Entity: {obj.EntityId} Base: {obj.BaseId} Pos: {obj.Position} IsBroke: {obj.IsBroke}");
+            ImGuiEx.Text($"Entity: {obj.EntityId} Base: {obj.DataId} Pos: {obj.Position} IsBroke: {obj.IsBroke}");
         Separator();
         Text("Elements:");
         foreach (var e in Controller.GetRegisteredElements())

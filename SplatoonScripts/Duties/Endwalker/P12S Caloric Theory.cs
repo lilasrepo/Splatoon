@@ -1,4 +1,4 @@
-﻿using Dalamud.Interface.Colors;
+using Dalamud.Interface.Colors;
 using ECommons;
 using ECommons.Configuration;
 using ECommons.DalamudServices;
@@ -6,7 +6,7 @@ using ECommons.GameFunctions;
 using ECommons.Hooks;
 using ECommons.MathHelpers;
 using ECommons.Schedulers;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Splatoon;
 using Splatoon.SplatoonScripting;
 using System.Collections.Generic;

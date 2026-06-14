@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons;
@@ -336,7 +336,7 @@ public class P2_Trine_Beta : SplatoonScript
             return;
 
         var position = NormalizeY(obj.Position);
-        _telegraphTriangles.Add(new TelegraphTriangleSignal(_telegraphTriangles.Count + 1, obj.BaseId, position));
+        _telegraphTriangles.Add(new TelegraphTriangleSignal(_telegraphTriangles.Count + 1, obj.DataId, position));
         TrySetEarlyFirstMoveDirections();
         TryRetryDirectionalSolveAfterWaveOne();
         TrySolveDestinationFromTelegraphs();
@@ -1623,7 +1623,7 @@ public class P2_Trine_Beta : SplatoonScript
 
     private static bool IsTrineTelegraphObject(IGameObject obj)
     {
-        return obj.BaseId is TrineTelegraphBaseIdA or TrineTelegraphBaseIdB;
+        return obj.DataId is TrineTelegraphBaseIdA or TrineTelegraphBaseIdB;
     }
 
     private static void AddUniquePosition(List<Vector3> positions, Vector3 candidate)

@@ -1,11 +1,11 @@
-﻿using Dalamud.Game.ClientState.Objects.SubKinds;
+using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Hooking;
 using ECommons.DalamudServices.Legacy;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.GameFunctions.VirtualTableClassifier;
 using ECommons.GameHelpers;
-using ECommons.GameHelpers.LegacyPlayer;
+// using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using Lumina.Excel.Sheets;
@@ -35,7 +35,9 @@ public static unsafe class AttachedInfo
     {
         Safe(delegate
         {
-            GameObject_ctor_hook = Svc.Hook.HookFromAddress<GameObject_ctor>(Svc.SigScanner.ScanText("48 8D 05 ?? ?? ?? ?? 48 89 01 33 C0 48 89 41 10 48 89 41 18 89 81 ?? ?? ?? ?? 48 89 81"), GameObject_ctor_detour);
+            // porting-note: HEAD sig "48 8D 05 ?? ?? ?? ?? 48 89 01 33 C0 48 89 41 10 48 89 41 18 89 81 ?? ?? ?? ?? 48 89 81" is for game 7.5.
+            // Walk-back sig from TC_porting/Splatoon AttachedInfo.cs:37 below works on game 7.1.
+            GameObject_ctor_hook = Svc.Hook.HookFromAddress<GameObject_ctor>(Svc.SigScanner.ScanText("48 8D 05 ?? ?? ?? ?? C7 81 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 01 48 8B C1 C3"), GameObject_ctor_detour);
             GameObject_ctor_hook.Enable();
         });
         Safe(delegate
@@ -168,18 +170,18 @@ public static unsafe class AttachedInfo
                 {
                     if(!Casters.Contains(b.Address))
                     {
-                        CastInfos[b.Address] = new(b.CastInfo.ActionId, Environment.TickCount64 - (long)(b.CastInfo.CurrentCastTime * 1000));
+                        CastInfos[b.Address] = new(b.CastActionId, Environment.TickCount64 - (long)(b.CurrentCastTime * 1000));
                         Casters.Add(b.Address);
                         string text;
                         if(P.Config.LogPosition)
                         {
-                            text = $"{b.Name} ({x.Position}) starts casting {b.CastInfo.ActionId} ({b.NameId}>{b.CastInfo.ActionId})";
+                            text = $"{b.Name} ({x.Position}) starts casting {b.CastActionId} ({b.NameId}>{b.CastActionId})";
                         }
                         else
                         {
-                            text = $"{b.Name} starts casting {b.CastInfo.ActionId} ({b.NameId}>{b.CastInfo.ActionId})";
+                            text = $"{b.Name} starts casting {b.CastActionId} ({b.NameId}>{b.CastActionId})";
                         }
-                        ScriptingProcessor.OnStartingCast(b.EntityId, b.CastInfo.ActionId);
+                        ScriptingProcessor.OnStartingCast(b.EntityId, b.CastActionId);
                         P.ChatMessageQueue.Enqueue(text);
                         if(P.Config.Logging)
                         {

@@ -1,8 +1,8 @@
-﻿using Dalamud.Memory;
+using Dalamud.Memory;
 using ECommons;
 using FFXIVClientStructs.FFXIV.Client.UI.Arrays;
 using FFXIVClientStructs.FFXIV.Client.UI.Info;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Splatoon.SplatoonScripting;
 using System.Collections.Generic;
 

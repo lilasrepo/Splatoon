@@ -1,7 +1,7 @@
-﻿using ECommons.Configuration;
+using ECommons.Configuration;
 using ECommons.DalamudServices;
 using FFXIVClientStructs.FFXIV.Common.Component.BGCollision;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Splatoon;
 using Splatoon.SplatoonScripting;
 using System;

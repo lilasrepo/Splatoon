@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Statuses;
 using Dalamud.Utility;
@@ -152,7 +152,8 @@ public static unsafe class Utils
 
     public static GameObject* ResolvePronounBPO(string p)
     {
-        var ret = ExtendedPronoun.Resolve(p);
+        // porting-note: walk-back ECommons calls this FakePronoun, not ExtendedPronoun.
+        var ret = FakePronoun.Resolve(p);
         if(Svc.Condition[ConditionFlag.DutyRecorderPlayback] && BasePlayerOverride != "")
         {
             if(p == "<me>")
@@ -286,7 +287,7 @@ public static unsafe class Utils
             var details = placeholder[1..^1].Split(":");
             if(uint.TryParse(details[1], details[1].StartsWith("0x") ? NumberStyles.HexNumber : default, null, out var result))
             {
-                return Svc.Objects.Where(x => x.ObjectId == result).Select(x => x.Position).ToList();
+                return Svc.Objects.Where(x => x.EntityId == result).Select(x => x.Position).ToList();
             }
         }
         if(placeholder == "<tethered>")
@@ -560,9 +561,9 @@ public static unsafe class Utils
         {
             if(e.UseCastRotation && obj.IsBattleChara(out var b))
             {
-                if(b.IsCasting() && b.CastInfo.ActionId.EqualsAny(e.refActorCastId))
+                if(b.IsCasting() && b.CastActionId.EqualsAny(e.refActorCastId))
                 {
-                    if(S.Projection.LastCast.TryGetValue(obj.ObjectId, out var casts) && casts.TryGetValue(new(ActionType.Action, b.CastInfo.ActionId), out var packet))
+                    if(S.Projection.LastCast.TryGetValue(obj.EntityId, out var casts) && casts.TryGetValue(new(ActionType.Action, b.CastActionId), out var packet))
                     {
                         return packet.Rotation;
                     }
@@ -571,7 +572,7 @@ public static unsafe class Utils
                 {
                     foreach(var castId in e.refActorCastId)
                     {
-                        if(S.Projection.LastCast.TryGetValue(obj.ObjectId, out var casts))
+                        if(S.Projection.LastCast.TryGetValue(obj.EntityId, out var casts))
                         {
                             if(casts.TryGetValue(new(ActionType.Action, castId), out var packet))
                             {
@@ -744,14 +745,14 @@ public static unsafe class Utils
 
     public static bool IsCastInRange(this IBattleChara c, float min, float max)
     {
-        if(c.CastInfo.CurrentCastTime.InRange(min, max))
+        if(c.CurrentCastTime.InRange(min, max))
         {
             return true;
         }
         return false;
     }
 
-    public static bool IsInRange(this IStatus buff, float min, float max)
+    public static bool IsInRange(this Dalamud.Game.ClientState.Statuses.Status buff, float min, float max) // TODO(api12): API15 had IStatus interface; API12 uses Dalamud.Game.ClientState.Statuses.Status class.
     {
         if(buff.RemainingTime.InRange(min, max))
         {

@@ -171,7 +171,7 @@ internal static class TabScripting
                 {
                     ImGuiEx.TreeNodeCollapsingHeader($"{ExcelTerritoryHelper.GetName(ter)} [{ter}]", () =>
                     {
-                        ImGui.PushID(ter);
+                        ImGui.PushID((int)ter); // porting-note(api12): ImGui.NET has no PushID(uint) overload
                         DrawScriptGroup(territoryScripts.Where(x => x.ValidTerritories.First() == ter).OrderBy(x => x.InternalData.Name));
                         ImGui.PopID();
                     });

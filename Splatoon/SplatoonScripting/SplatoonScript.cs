@@ -129,7 +129,13 @@ public abstract class SplatoonScript
     /// <param name="target">Targeted object's ID</param>
     /// <param name="entityId">First parameter of object effect.</param>
     /// <param name="actionId">Second parameter of object effect.</param>
-    public virtual void OnObjectEffect(uint target, uint entityId, uint actionId) { }
+    public virtual void OnObjectEffect(uint target, uint entityId, uint actionId)
+    {
+        // porting-note: forward to legacy 3-arg ushort overload so older scripts that override the old
+        // signature still receive the event when the new (HEAD) plugin invokes the new signature.
+        OnObjectEffect(target, (ushort)entityId, (ushort)actionId);
+    }
+    public virtual void OnObjectEffect(uint target, ushort p1, ushort p2) { }
 
     /// <summary>
     /// Will be called when a tether created between two game objects. This method will only be called if a script is enabled.
@@ -209,7 +215,13 @@ public abstract class SplatoonScript
     /// <param name="p8"></param>
     /// <param name="targetId"></param>
     /// <param name="replaying"></param>
-    public virtual void OnActorControl(uint sourceId, uint command, uint p1, uint p2, uint p3, uint p4, uint p5, uint p6, uint p7, uint p8, ulong targetId, byte replaying) { }
+    public virtual void OnActorControl(uint sourceId, uint command, uint p1, uint p2, uint p3, uint p4, uint p5, uint p6, uint p7, uint p8, ulong targetId, byte replaying)
+    {
+        // porting-note: forward to legacy 10-arg overload (drops command + p8) so older scripts that
+        // override the old signature still receive the event when the new (HEAD) plugin invokes the new sig.
+        OnActorControl(sourceId, p1, p2, p3, p4, p5, p6, p7, targetId, replaying);
+    }
+    public virtual void OnActorControl(uint sourceId, uint p1, uint p2, uint p3, uint p4, uint p5, uint p6, uint p7, ulong targetId, byte replaying) { }
 
     [Obsolete($"Please use {nameof(OnActionEffectEvent)}")]
     public virtual void OnActionEffect(uint ActionID, ushort animationID, ActionEffectType type, uint sourceID, ulong targetOID, uint damage) { }

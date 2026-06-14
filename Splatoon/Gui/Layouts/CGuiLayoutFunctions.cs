@@ -67,7 +67,7 @@ internal partial class CGui
                 if(ImGui.BeginCombo("Face chara##", el.faceplayer, ImGuiComboFlags.HeightLarge))
                 {
                     ImGui.SetNextItemWidth(150f);
-                    ImGui.InputText("##enterManually", ref el.faceplayer);
+                    ImGui.InputText("##enterManually", ref el.faceplayer, 200);
                     foreach(var option in FaceOptions)
                     {
                         if(ImGui.Selectable(option))

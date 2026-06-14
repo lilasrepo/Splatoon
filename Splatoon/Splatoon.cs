@@ -1,4 +1,4 @@
-﻿using Dalamud.Game;
+using Dalamud.Game;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.Text;
@@ -56,13 +56,13 @@ public unsafe class Splatoon : IDalamudPlugin
         {
             if(!Svc.Condition[ConditionFlag.DutyRecorderPlayback])
             {
-                return Svc.Objects.LocalPlayer;
+                return Svc.ClientState.LocalPlayer;
             }
             else
             {
                 if(BasePlayerOverride == "")
                 {
-                    return Svc.Objects.LocalPlayer;
+                    return Svc.ClientState.LocalPlayer;
                 }
                 foreach(var x in Svc.Objects)
                 {
@@ -71,7 +71,7 @@ public unsafe class Splatoon : IDalamudPlugin
                         return pc;
                     }
                 }
-                return Svc.Objects.LocalPlayer;
+                return Svc.ClientState.LocalPlayer;
             }
         }
     }
@@ -122,7 +122,7 @@ public unsafe class Splatoon : IDalamudPlugin
     internal static Dictionary<string, uint> NameNpcIDs = [];
     internal MapEffectProcessor mapEffectProcessor;
     internal TetherProcessor TetherProcessor;
-    internal ObjectEffectProcessor ObjectEffectProcessor;
+    // internal ObjectEffectProcessor ObjectEffectProcessor; // TODO(api12): processor disabled (game-7.5 hook signature)
     internal HttpClient HttpClient;
     internal PinnedElementEdit PinnedElementEditWindow;
     internal RenderableZoneSelector RenderableZoneSelector;
@@ -263,10 +263,11 @@ public unsafe class Splatoon : IDalamudPlugin
         SplatoonIPC.Init();
     }
 
-    private void OnChatMessage(Dalamud.Game.Chat.IHandleableChatMessage message)
-    {
-        this.OnChatMessage(message.Type, message.Timestamp, message.Sender, message.Message);
-    }
+    // TODO(api12): IHandleableChatMessage overload is API15-only — disabled. The plain OnChatMessage(XivChatType, int, SeString, SeString) overload (further down) binds to API12 IChatGui.ChatMessage event.
+    // private void OnChatMessage(Dalamud.Game.Chat.IHandleableChatMessage message)
+    // {
+    //     this.OnChatMessage(message.Type, message.Timestamp, message.Sender, message.Message);
+    // }
 
     public void Dispose()
     {
@@ -349,7 +350,8 @@ public unsafe class Splatoon : IDalamudPlugin
     }
 
     internal static readonly string[] InvalidSymbols = { "", "", "", "“", "”", "" };
-    internal void OnChatMessage(XivChatType type, int timestamp, SeString sender, SeString message)
+    // porting-note: API12 IChatGui.OnMessageDelegate uses ref SeString sender/message and ref bool isHandled.
+    internal void OnChatMessage(XivChatType type, int timestamp, ref SeString sender, ref SeString message, ref bool isHandled)
     {
         var inttype = (int)type;
         if(inttype == 2105 && LimitGaugeResets.Equals(message.ToString()))
@@ -400,7 +402,8 @@ public unsafe class Splatoon : IDalamudPlugin
         }
     }
 
-    internal void TerritoryChangedEvent(uint e)
+    // porting-note: API12 ClientState.TerritoryChanged is Action<ushort>; HEAD upgraded to uint in API15.
+    internal void TerritoryChangedEvent(ushort e)
     {
         PriorityPopupWindow.IsOpen = false;
         PriorityPopupWindow.Open(false);

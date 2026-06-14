@@ -5,7 +5,7 @@ using ECommons.Configuration;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.Hooks;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Splatoon;
 using ECommons.DalamudServices.Legacy;
 using Splatoon.SplatoonScripting;

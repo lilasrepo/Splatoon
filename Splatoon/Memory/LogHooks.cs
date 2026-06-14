@@ -14,12 +14,17 @@ public unsafe class LogHooks
 {
     private LogHooks()
     {
-        EzSignatureHelper.Initialize(this);
+        // porting-note: EzSignatureHelper.Initialize would scan for "40 53 57 48 81 EC ?? ?? ?? ?? 48 8B FA 8B D1"
+        // (game 7.5 ActorCast hook); this sig has no game-7.1 equivalent that we've identified.
+        // Skipping the init keeps Splatoon loading without the spammy "can't find signature" exception.
+        // Side effect: ScriptingProcessor.OnStartingCast / Projection.LastCast won't update from ActorCast packets;
+        // both can still be driven from the (working) IBattleChara cast-info polling path.
+        // EzSignatureHelper.Initialize(this);
     }
 
     private delegate nint ActorCastDelegate(uint sourceId, nint packetPtr);
 
-    [EzHook("40 53 57 48 81 EC ?? ?? ?? ?? 48 8B FA 8B D1")]
+    // [EzHook("40 53 57 48 81 EC ?? ?? ?? ?? 48 8B FA 8B D1")]
     private EzHook<ActorCastDelegate> ActorCastHook;
     private nint ActorCastDetour(uint sourceId, nint packetPtr)
     {

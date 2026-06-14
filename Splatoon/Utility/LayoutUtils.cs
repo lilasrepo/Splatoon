@@ -1,9 +1,9 @@
-﻿using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.SubKinds;
-using ECommons.CSExtensions;
+// using ECommons.CSExtensions; // TODO(api12): walk-back ECommons lacks CSExtensions namespace
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
-using ECommons.GameHelpers.LegacyPlayer;
+// using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
 using ECommons.MathHelpers;
 using Splatoon.Memory;
 using Splatoon.Structures;
@@ -105,7 +105,8 @@ public static unsafe class LayoutUtils
 
     public static bool CheckAnimationId(Element e, IEventObj eobj)
     {
-        return e.AnimationIds.Contains(eobj.AnimationId) == !e.AnimationInverted;
+        // TODO(api12): IEventObj.AnimationId is API15-only. Always treat as "no match" so the AnimationId filter is a no-op.
+        return false == !e.AnimationInverted;
     }
 
     public static bool IsTetherMatches(Element e, IGameObject obj)
@@ -314,8 +315,8 @@ public static unsafe class LayoutUtils
             float totalCastTime = 1;
             if(chr.IsCasting(e.refActorCastId))
             {
-                castTime = chr.CastInfo.CurrentCastTime;
-                totalCastTime = chr.CastInfo.TotalCastTime;
+                castTime = chr.CurrentCastTime;
+                totalCastTime = chr.TotalCastTime;
             }
             else if(!(e.refActorUseOvercast && AttachedInfo.TryGetCastTime(chr.Address, e.refActorCastId, out castTime)))
             {

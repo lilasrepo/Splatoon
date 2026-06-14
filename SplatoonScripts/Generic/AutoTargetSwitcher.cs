@@ -4,7 +4,7 @@ using ECommons.DalamudServices;
 using ECommons.DalamudServices.Legacy;
 using ECommons.Logging;
 using ECommons.Throttlers;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Splatoon.SplatoonScripting;
 using System;
 using System.Collections.Generic;

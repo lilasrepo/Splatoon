@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Interface.Colors;
 using ECommons;
 using ECommons.Configuration;
@@ -6,7 +6,7 @@ using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Lumina.Data.Parsing.Tex.Buffers;
 using Splatoon.SplatoonScripting;
 using Splatoon.Utility;

@@ -1,13 +1,16 @@
-﻿using Dalamud.Bindings.ImGui;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using ECommons;
 using ECommons.Configuration;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
+using Player = ECommons.GameHelpers.LegacyPlayer.Player;
+// using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
 using ECommons.Hooks.ActionEffectTypes;
 using ECommons.ImGuiMethods;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
+using FFXIVClientStructs.FFXIV.Client.UI.Info;
+using ImGuiNET;
 using Splatoon.SplatoonScripting;
 using Splatoon.SplatoonScripting.Priority;
 using static Splatoon.Splatoon;

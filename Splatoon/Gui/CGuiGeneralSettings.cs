@@ -1,4 +1,4 @@
-﻿using Dalamud.Interface.Colors;
+using Dalamud.Interface.Colors;
 using Dalamud.Interface.Components;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
@@ -178,7 +178,7 @@ internal partial class CGui
                         ImGui.SameLine();
                         if(ThreadLoadImageHandler.TryGetIconTextureWrap(j.GetIcon(), true, out var tex))
                         {
-                            ImGui.Image(tex.Handle, new Vector2(ImGui.GetFrameHeight()));
+                            ImGui.Image(tex.ImGuiHandle, new Vector2(ImGui.GetFrameHeight()));
                             ImGui.SameLine();
                         }
                         ImGuiEx.TextV(j.ToString());

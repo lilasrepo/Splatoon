@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Objects.SubKinds;
+using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons;
 using ECommons.Configuration;
@@ -11,7 +11,7 @@ using ECommons.ImGuiMethods;
 using ECommons.Schedulers;
 using ECommons.Throttlers;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Splatoon.SplatoonScripting;
 using System.Collections.Generic;
 using System.Linq;

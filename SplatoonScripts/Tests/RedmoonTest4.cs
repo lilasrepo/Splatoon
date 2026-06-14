@@ -1,4 +1,4 @@
-﻿// Ignore Spelling: Metadata Leve wks
+// Ignore Spelling: Metadata Leve wks
 
 using ECommons;
 using ECommons.Automation;
@@ -10,7 +10,7 @@ using ECommons.GameHelpers;
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Lumina.Excel.Sheets;
 using Splatoon.SplatoonScripting;
 using System;

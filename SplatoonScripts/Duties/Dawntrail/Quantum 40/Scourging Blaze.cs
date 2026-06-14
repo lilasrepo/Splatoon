@@ -1,4 +1,4 @@
-﻿using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons;
 using ECommons.Configuration;
@@ -84,7 +84,7 @@ public class Scourging_Blaze : SplatoonScript
 
                 var crystals = Svc.Objects
                     .OfType<IGameObject>()
-                    .Where(obj => obj.BaseId == Crystal);
+                    .Where(obj => obj.DataId == Crystal);
 
                 if (!isIn12Lane)
                 {
@@ -117,7 +117,7 @@ public class Scourging_Blaze : SplatoonScript
 
                 var crystals = Svc.Objects
                     .OfType<IGameObject>()
-                    .Where(obj => obj.BaseId == Crystal);
+                    .Where(obj => obj.DataId == Crystal);
 
                 if (!isIn12Lane)
                 {

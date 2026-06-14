@@ -51,7 +51,7 @@ internal static unsafe class Explorer
     internal static void DrawGameObject(IGameObject obj)
     {
         ImGuiEx.TextCopy($"VTable: {(nint)obj.Struct()->VirtualTable:X16} / {VTableClassifier.Classify(obj.Struct())}");
-        ImGuiEx.TextCopy($"Struct kind: {obj.Struct()->ObjectKind}/{obj.Struct()->SubKind}/{obj.Struct()->BattleNpcSubKind}");
+        ImGuiEx.TextCopy($"Struct kind: {obj.Struct()->ObjectKind}/{obj.Struct()->SubKind}"); // porting-note: BattleNpcSubKind not in API12 FCS GameObject
         ImGuiEx.TextCopy($"GOID: {obj.Struct()->GetGameObjectId().ObjectId}/{obj.Struct()->GetGameObjectId().Type}");
         ImGuiEx.TextCopy($"GameObject {obj}");
         ImGuiEx.TextCopy($"ObjectKind: {obj.ObjectKind}");
@@ -121,9 +121,7 @@ internal static unsafe class Explorer
         if(obj.IsBattleChara(out var b))
         {
             ImGuiEx.TextCopy("---------- Battle chara ----------");
-            ImGuiEx.TextCopy($"StatusManager: {(nint)b.Struct()->GetStatusManager()}");
-            ImGuiEx.TextCopy($"CastInfo: {(nint)b.Struct()->GetCastInfo()}");
-            ImGuiEx.TextCopy($"{"Casting".Loc()}: {b.IsCasting}, {"Action ID".Loc()} = {b.CastInfo.ActionId.Format()}, {"Type".Loc()} = {b.CastInfo.ActionType}, {"Cast time".Loc()}: {b.CastInfo.CurrentCastTime:F1}/{b.CastInfo.TotalCastTime:F1}");
+            ImGuiEx.TextCopy($"{"Casting".Loc()}: {b.IsCasting}, {"Action ID".Loc()} = {b.CastActionId.Format()}, {"Type".Loc()} = {b.CastActionType}, {"Cast time".Loc()}: {b.CurrentCastTime:F1}/{b.TotalCastTime:F1}");
             if(AttachedInfo.CastInfos.TryGetValue(b.Address, out var info))
             {
                 ImGuiEx.TextCopy($"{"Overcast".Loc()}: ID={info.ID}, StartTime={info.StartTime}, Age={info.AgeF:F1}");

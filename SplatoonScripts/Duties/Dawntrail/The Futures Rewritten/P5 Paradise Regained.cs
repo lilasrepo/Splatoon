@@ -1,4 +1,4 @@
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Dalamud.Interface.Components;
 using ECommons;
 using ECommons.Configuration;
@@ -8,6 +8,7 @@ using ECommons.Hooks.ActionEffectTypes;
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
 using ECommons.MathHelpers;
+using ImGuiNET;
 using Splatoon;
 using Splatoon.SplatoonScripting;
 using Splatoon.Utility;

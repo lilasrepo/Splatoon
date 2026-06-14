@@ -1,10 +1,10 @@
-﻿using Dalamud.Hooking;
+using Dalamud.Hooking;
 using ECommons.DalamudServices;
 using ECommons.GameHelpers;
 using ECommons.Hooks;
 using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Common.Math;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using SharpDX;
 using Splatoon.SplatoonScripting;
 using System;

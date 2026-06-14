@@ -1,4 +1,4 @@
-﻿using Dalamud.Interface;
+using Dalamud.Interface;
 using ECommons;
 using ECommons.Configuration;
 using ECommons.DalamudServices;
@@ -7,11 +7,11 @@ using ECommons.ImGuiMethods;
 using ECommons.ImGuiMethods.TerritorySelection;
 using ECommons.Reflection;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Splatoon.SplatoonScripting;
 using System;
 using Player = ECommons.GameHelpers.LegacyPlayer.Player;
-using ECommons.GameHelpers.LegacyPlayer;
+// using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
 using System.Collections.Generic;
 
 using ECommons.DalamudServices.Legacy;

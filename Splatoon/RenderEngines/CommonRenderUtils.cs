@@ -1,7 +1,7 @@
-﻿using Dalamud.Game.ClientState.Objects.SubKinds;
+using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.Collections;
-using ECommons.CSExtensions;
+// using ECommons.CSExtensions; // TODO(api12): walk-back ECommons lacks CSExtensions namespace
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
@@ -32,7 +32,8 @@ public static unsafe class CommonRenderUtils
         {
             ret = ret.Replace("$OBJECTID", $"{go.EntityId.Format()}")
             .Replace("$DATAID", $"{go.DataId.Format()}")
-            .Replace("$GIMMICKID", $"{go.Struct()->GimmickId.Format()}")
+            // TODO(api12): GimmickId field renamed/removed in TC 7.1 game struct.
+            .Replace("$GIMMICKID", "")
             .Replace("$ESTATE", $"{go.Struct()->EventState.ToInt().Format()}")
             .Replace("$EVENTID", $"{go.Struct()->EventId.Id.ToInt().Format()}")
             .Replace("$HITBOXR", $"{go.HitboxRadius:F1}")
@@ -45,15 +46,17 @@ public static unsafe class CommonRenderUtils
             .Replace("$MSTATUS", $"{(*(int*)(go.Address + 0x104)).Format()}");
             if(go is IEventObj eobj)
             {
+                // TODO(api12): IEventObj.AnimationId is API15-only.
                 ret = ret
-                .Replace("$ANIMATIONID", $"{eobj.AnimationId.Format()}");
+                .Replace("$ANIMATIONID", "");
             }
             if(go.IsBattleChara(out var chr))
             {
+                // TODO(api12): IBattleChara.ModelId / .StatusLoop are API15-only.
                 ret = ret
-                .Replace("$MODELID", $"{chr.ModelId.Format()}")
+                .Replace("$MODELID", "")
                 .Replace("$NAMEID", $"{chr.NameId.Format()}")
-                .Replace("$STLP", $"{chr.StatusLoop.Format()}")
+                .Replace("$STLP", "")
                 .Replace("$TETHER", $"{chr.Struct()->Vfx.Tethers.ToArray().Where(x => x.Id != 0).Select(x => $"{x.Id}").Print(",")}")
                 .Replace("$TRANSFORM", $"{((int)chr.GetTransformationID()).Format()}");
                 if(ret.Contains("$STREM:"))
@@ -80,12 +83,12 @@ public static unsafe class CommonRenderUtils
                         {
                             if(chr.IsCasting())
                             {
-                                ret = ret.Replace(match.Groups[0].Value, $"{(chr.CastInfo.TotalCastTime - chr.CastInfo.CurrentCastTime).ToString(match.Groups[1].Value)}")
-                                    .Replace("$CASTNAME", ExcelActionHelper.GetActionName(chr.CastInfo.ActionId));
+                                ret = ret.Replace(match.Groups[0].Value, $"{(chr.TotalCastTime - chr.CurrentCastTime).ToString(match.Groups[1].Value)}")
+                                    .Replace("$CASTNAME", ExcelActionHelper.GetActionName(chr.CastActionId));
                             }
                             else
                             {
-                                ret = ret.Replace(match.Groups[0].Value, "").Replace("$CASTNAME", ExcelActionHelper.GetActionName(chr.CastInfo.ActionId));
+                                ret = ret.Replace(match.Groups[0].Value, "").Replace("$CASTNAME", ExcelActionHelper.GetActionName(chr.CastActionId));
                             }
                         }
                         else
@@ -105,7 +108,7 @@ public static unsafe class CommonRenderUtils
                 }
                 void castFallback()
                 {
-                    ret = ret.Replace("$CAST", chr.Struct()->GetCastInfo() != null ? $"[{chr.CastInfo.ActionId.Format()}] {chr.CastInfo.CurrentCastTime}/{chr.CastInfo.TotalCastTime}" : "");
+                    ret = ret.Replace("$CAST", chr.Struct()->GetCastInfo() != null ? $"[{chr.CastActionId.Format()}] {chr.CurrentCastTime}/{chr.TotalCastTime}" : "");
                 }
             }
             ret = ret.Replace("$NAME", go.Name.ToString());

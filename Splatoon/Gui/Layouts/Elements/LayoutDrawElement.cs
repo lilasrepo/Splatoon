@@ -1,12 +1,17 @@
-﻿using Dalamud.Game;
+using Dalamud.Game;
 using Dalamud.Game.ClientState.Objects.Enums;
-using Dalamud.Game.ClientState.Statuses;
+// porting-note: in HEAD source, "Status" usually means the Lumina sheet row struct, while
+// "IStatus" is the Dalamud chrome wrapper (API15 interface). API12 maps both to:
+//   Status (sheet)     → Lumina.Excel.Sheets.Status
+//   IStatus (wrapper)  → Dalamud.Game.ClientState.Statuses.Status (class)
+using Status = Lumina.Excel.Sheets.Status;
+using IStatus = Dalamud.Game.ClientState.Statuses.Status;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility.Raii;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
-using ECommons.GameHelpers.LegacyPlayer;
+// using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
 using ECommons.LanguageHelpers;
 using ECommons.MathHelpers;
 using Lumina.Excel;
@@ -14,6 +19,7 @@ using Lumina.Excel.Sheets;
 using Newtonsoft.Json;
 using Splatoon.RenderEngines;
 using Splatoon.Serializables;
+using Splatoon.Utility;
 using System.Globalization;
 using System.Linq;
 
@@ -703,10 +709,10 @@ internal unsafe partial class CGui
                     foreach(var x in Svc.Objects.OfTypeIBattleNpc().Where(x => x.IsCasting()))
                     {
                         ImGui.PushID(i++);
-                        if(ImGui.Selectable($"{ExcelActionHelper.GetActionName(x.CastInfo.ActionId, true)} - {x.CastInfo.CurrentCastTime:F1}/{x.CastInfo.TotalCastTime:F1} - from {x.Name} N#{x.NameId} D#{x.DataId}", selected: el.refActorCastId.Contains(x.CastInfo.ActionId), flags: ImGuiSelectableFlags.DontClosePopups))
+                        if(ImGui.Selectable($"{ExcelActionHelper.GetActionName(x.CastActionId, true)} - {x.CurrentCastTime:F1}/{x.TotalCastTime:F1} - from {x.Name} N#{x.NameId} D#{x.DataId}", selected: el.refActorCastId.Contains(x.CastActionId), flags: ImGuiSelectableFlags.DontClosePopups))
                         {
                             if(ImGuiEx.Shift) el.refActorCastId.Clear();
-                            el.refActorCastId.Toggle(x.CastInfo.ActionId);
+                            el.refActorCastId.Toggle(x.CastActionId);
                             if(el.refActorComparisonType == 0)
                             {
                                 el.refActorComparisonType = 6;
@@ -793,7 +799,7 @@ internal unsafe partial class CGui
                     {
                         if(ImGui.BeginMenu($"{Player.GetNameWithWorld(x)} {x.GetJob()}"))
                         {
-                            var list = x.StatusList.Select(Item1 => (Item1, Status.GetRef(Item1.StatusId))).Where(s => s.Item2.ValueNullable != null).ToList();
+                            var list = x.StatusList.Select(Item1 => (Item1, LuminaSheetRef.GetRef<Status>(Item1.StatusId))).Where(s => s.Item2.ValueNullable != null).ToList();
                             listItems(list, "Debuffs", s => s.StatusCategory == 2);
                             listItems(list, "Buffs", s => s.StatusCategory == 1);
                             listItems(list, "Other", s => s.StatusCategory != 1 && s.StatusCategory != 2);
@@ -812,7 +818,7 @@ internal unsafe partial class CGui
                             if(x.NameId == nameId)
                             {
                                 name ??= $"{x.Name} #{x.NameId}";
-                                list.AddRange(x.StatusList.Select(Item1 => (Item1, Status.GetRef(Item1.StatusId))).Where(s => s.Item2.ValueNullable != null));
+                                list.AddRange(x.StatusList.Select(Item1 => (Item1, LuminaSheetRef.GetRef<Status>(Item1.StatusId))).Where(s => s.Item2.ValueNullable != null));
                             }
                         }
                         if(list.Count > 0)
@@ -835,7 +841,7 @@ internal unsafe partial class CGui
                         {
                             if(ThreadLoadImageHandler.TryGetIconTextureWrap(s.Item2.Value.Icon, false, out var tex))
                             {
-                                ImGui.Image(tex.Handle, new Vector2(ImGui.GetTextLineHeight()));
+                                ImGui.Image(tex.ImGuiHandle, new Vector2(ImGui.GetTextLineHeight()));
                                 ImGui.SameLine();
                             }
                             if(ImGui.Selectable($"{s.Item1.StatusId} {s.Item2.Value.Name}", selected: el.refActorBuffId.Contains(s.Item1.StatusId), flags: ImGuiSelectableFlags.DontClosePopups))
@@ -1105,7 +1111,7 @@ internal unsafe partial class CGui
             ImGui.SameLine();
             ImGui.SetNextItemWidth(200f);
             var animationSplit = el.AnimationIds.Print(", ");
-            if(ImGui.InputTextWithHint("##aniId", "Comma-separated list".Loc(), ref animationSplit))
+            if(ImGui.InputTextWithHint("##aniId", "Comma-separated list".Loc(), ref animationSplit, 500))
             {
                 var spl = animationSplit.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                 el.AnimationIds.Clear();
@@ -1132,7 +1138,7 @@ internal unsafe partial class CGui
             {
                 if(el.coneAngleMin >= el.coneAngleMax)
                 {
-                    ImGuiEx.HelpMarker("Point A equals Point B. Nothing will be drawn. ", EColor.RedBright, FontAwesomeIcon.ExclamationTriangle.ToIconString(), preserveCursor: true);
+                    ImGuiEx.HelpMarker("Point A equals Point B. Nothing will be drawn. ", EColor.RedBright, FontAwesomeIcon.ExclamationTriangle.ToIconString());
                 }
             }
             ImGui.SameLine();
@@ -1207,7 +1213,7 @@ internal unsafe partial class CGui
             ImGuiUtils.SizedText("Angle:".Loc(), WidthElement);
             if(el.coneAngleMin >= el.coneAngleMax)
             {
-                ImGuiEx.HelpMarker("Minimum cone angle is higher than maximum cone angle; nothing will be drawn. Please correct this issue", EColor.RedBright, FontAwesomeIcon.ExclamationTriangle.ToIconString(), preserveCursor: true);
+                ImGuiEx.HelpMarker("Minimum cone angle is higher than maximum cone angle; nothing will be drawn. Please correct this issue", EColor.RedBright, FontAwesomeIcon.ExclamationTriangle.ToIconString());
             }
             ImGui.SameLine();
             ImGui.SetNextItemWidth(50f);
@@ -1289,11 +1295,11 @@ internal unsafe partial class CGui
 
             if(el.radius == 0.35f)
             {
-                ImGuiEx.HelpMarker("Radius is not changed; is this intended?", EColor.RedBright, FontAwesomeIcon.ExclamationTriangle.ToIconString(), preserveCursor: true);
+                ImGuiEx.HelpMarker("Radius is not changed; is this intended?", EColor.RedBright, FontAwesomeIcon.ExclamationTriangle.ToIconString());
             }
             else if(!el.type.EqualsAny(0, 1) && el.radius == 0f)
             {
-                ImGuiEx.HelpMarker("Radius is not changed; is this intended?", EColor.RedBright, FontAwesomeIcon.ExclamationTriangle.ToIconString(), preserveCursor: true);
+                ImGuiEx.HelpMarker("Radius is not changed; is this intended?", EColor.RedBright, FontAwesomeIcon.ExclamationTriangle.ToIconString());
             }
             ImGui.SameLine();
             ImGui.SetNextItemWidth(60f);

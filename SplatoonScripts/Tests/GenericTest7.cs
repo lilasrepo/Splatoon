@@ -1,4 +1,4 @@
-﻿using Dalamud.Memory;
+using Dalamud.Memory;
 using ECommons;
 using ECommons.Automation;
 using ECommons.EzHookManager;
@@ -10,7 +10,7 @@ using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Common.Component.Excel;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Splatoon.SplatoonScripting;
 using System;
 using System.Buffers;

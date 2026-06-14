@@ -1,10 +1,10 @@
-﻿using Dalamud.Plugin.Ipc.Exceptions;
+using Dalamud.Plugin.Ipc.Exceptions;
 using ECommons.Configuration;
 using ECommons.DalamudServices;
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using NotificationMasterAPI;
 using Splatoon.SplatoonScripting;
 using System;

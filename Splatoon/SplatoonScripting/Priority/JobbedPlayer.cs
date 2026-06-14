@@ -1,4 +1,4 @@
-﻿using ECommons.ExcelServices;
+using ECommons.ExcelServices;
 using ECommons.PartyFunctions;
 using Splatoon.Gui.Priority;
 using System.Diagnostics.CodeAnalysis;
@@ -39,7 +39,7 @@ public class JobbedPlayer
                 {
                     if(ThreadLoadImageHandler.TryGetIconTextureWrap(x.ClassJob.GetIcon(), true, out var tex))
                     {
-                        ImGui.Image(tex.Handle, new(ImGui.GetFontSize()));
+                        ImGui.Image(tex.ImGuiHandle, new(ImGui.GetFontSize()));
                         ImGui.SameLine(0, 1);
                     }
                     if(ImGui.Selectable($"{x.NameWithWorld}"))

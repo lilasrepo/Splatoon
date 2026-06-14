@@ -1,4 +1,4 @@
-﻿using ECommons.ExcelServices;
+using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.GameFunctions.VirtualTableClassifier;
 using ECommons.MathHelpers;
@@ -60,7 +60,7 @@ internal class Projection : IDisposable
             _ => 1,
         };
         ret.refActorComparisonType = 2;
-        ret.refActorObjectID = caster.ObjectId;
+        ret.refActorObjectID = caster.EntityId;
         ret.Filled = true;
         ret.fillIntensity = 0.4f;
         ret.includeRotation = true;
@@ -73,7 +73,7 @@ internal class Projection : IDisposable
         ret.faceplayer = "";
         ret.RotationOverrideAngleOnlyMode = false;
         ret.RotationOverride = false;
-        ret.CastFractionOverride = caster.CastInfo.CurrentCastTime / caster.CastInfo.TotalCastTime;
+        ret.CastFractionOverride = caster.CurrentCastTime / caster.TotalCastTime;
         ret.fillIntensity = P.Config.ProjectionFillIntensity;
         return ret;
     }
@@ -90,11 +90,12 @@ internal class Projection : IDisposable
         List<(IBattleNpc obj, Element element)> injectedElements = [];
         foreach(var x in Svc.Objects)
         {
-            if(x.IsBattleNpc(out var b) && b.GetNameplateKind() != NameplateKind.FriendlyBattleNPC && b.IsCasting() && b.CastInfo.ActionType == (int)ActionType.Action && Svc.Data.GetExcelSheet<Action>().TryGetRow(b.CastInfo.ActionId, out var data))
+            if(x is IBattleNpc b && b.GetNameplateKind() != NameplateKind.FriendlyBattleNPC && b.IsCasting() && b.CastActionType == (int)ActionType.Action && Svc.Data.GetExcelSheet<Action>().TryGetRow(b.CastActionId, out var data))
             {
                 var shape = GuessShapeAndSize(data, b);
-                var info = b.CastInfo;
-                var targetObjectId = (info.TargetId.ObjectId != 0xE000_0000) ? info.TargetId.ObjectId : b.ObjectId;
+                // porting-note: API12 IBattleChara has no CastInfo wrapper; reach into the game struct directly.
+                var info = b.Struct()->GetCastInfo();
+                var targetObjectId = (info != null && info->TargetId.ObjectId != 0xE000_0000) ? info->TargetId.ObjectId : b.EntityId;
                 if(shape.Range > 0f && (data.EffectRange < RaidwideSize || shape.Shape != Shape.Circle))
                 {
                     var blacklisted = false;
@@ -109,7 +110,7 @@ internal class Projection : IDisposable
                     {
                         blacklisted = true;
                     }
-                    ProjectionItemDescriptor descriptor = P.ConfigGui.IsOpen ? new(new(b.CastInfo.ActionType, b.CastInfo.ActionId), b.ObjectId, blacklisted) : null;
+                    ProjectionItemDescriptor descriptor = P.ConfigGui.IsOpen ? new(new(b.CastActionType, b.CastActionId), b.EntityId, blacklisted) : null;
                     ProjectingItems.Add(descriptor);
                     bool? showOverride = null;
                     var isAlreadyProcessed = false;
@@ -117,12 +118,12 @@ internal class Projection : IDisposable
                     {
                         if(LayoutUtils.IsLayoutEnabled(layout))
                         {
-                            if(layout.ForcedProjectorActions.Contains(b.CastInfo.ActionId))
+                            if(layout.ForcedProjectorActions.Contains(b.CastActionId))
                             {
                                 descriptor?.WhitelistingLayouts.Add(layout.InternationalName.Get(layout.Name));
                                 showOverride = true;
                             }
-                            if(layout.BlacklistedProjectorActions.Contains(b.CastInfo.ActionId))
+                            if(layout.BlacklistedProjectorActions.Contains(b.CastActionId))
                             {
                                 descriptor?.BlacklistingLayouts.Add(layout.InternationalName.Get(layout.Name));
                                 showOverride = false;
@@ -134,7 +135,7 @@ internal class Projection : IDisposable
                                     if(layoutElement.Enabled
                                         && layoutElement.type.EqualsAny(1, 3, 4)
                                         && layoutElement.refActorRequireCast
-                                        && layoutElement.refActorCastId.Contains(b.CastInfo.ActionId)
+                                        && layoutElement.refActorCastId.Contains(b.CastActionId)
                                         && LayoutUtils.IsAttributeMatches(layoutElement, b)
                                         )
                                     {
@@ -155,7 +156,7 @@ internal class Projection : IDisposable
                     descriptor?.Rendered = true;
                     var element = RentElement(elementIndex++, shape, b);
                     var rotation = 0f;
-                    if(LastCast.TryGetValue(b.ObjectId, out var list) && list.TryGetValue(new(b.CastInfo.ActionType, b.CastInfo.ActionId), out var packet) && packet.ActionType == b.CastInfo.ActionType)
+                    if(LastCast.TryGetValue(b.EntityId, out var list) && list.TryGetValue(new(b.CastActionType, b.CastActionId), out var packet) && packet.ActionType == b.CastActionType)
                     {
                         rotation = 180 + packet.Rotation.RadToDeg();
                         element.RotationOverrideAddAngle = rotation;
@@ -182,10 +183,10 @@ internal class Projection : IDisposable
                         element.refActorObjectID = targetObjectId;
                         element.radius = shape.Range;
                         element.Donut = 0;
-                        if(info.TargetId.ObjectId == 0xE000_0000)
+                        if(info->TargetId.ObjectId == 0xE000_0000)
                         {
                             element.type = 0;
-                            element.SetRefPosition(info.TargetLocation);
+                            element.SetRefPosition(info->TargetLocation);
                         }
                     }
                     else if(shape.Shape == Shape.Donut)
@@ -193,17 +194,17 @@ internal class Projection : IDisposable
                         element.refActorObjectID = targetObjectId;
                         element.radius = shape.AngleOrWidth;
                         element.Donut = shape.Range;
-                        if(info.TargetId.ObjectId == 0xE000_0000)
+                        if(info->TargetId.ObjectId == 0xE000_0000)
                         {
                             element.type = 0;
-                            element.SetRefPosition(info.TargetLocation);
+                            element.SetRefPosition(info->TargetLocation);
                         }
                     }
                     else if(shape.Shape == Shape.Rect)
                     {
                         element.radius = shape.AngleOrWidth;
                         element.offY = shape.Range;
-                        if(targetObjectId != b.ObjectId)
+                        if(targetObjectId != b.EntityId)
                         {
                             element.faceplayer = $"<objectid:{targetObjectId}>";
                         }
@@ -229,7 +230,7 @@ internal class Projection : IDisposable
                         element.coneAngleMin = (int)-shape.AngleOrWidth.RadToDeg();
                         element.coneAngleMax = (int)shape.AngleOrWidth.RadToDeg();
 
-                        if(targetObjectId != b.ObjectId)
+                        if(targetObjectId != b.EntityId)
                         {
                             element.faceplayer = $"<objectid:{targetObjectId}>";
                         }
@@ -255,11 +256,11 @@ internal class Projection : IDisposable
                             Math.Abs((angle1 - angle2).RadToDeg()).ApproximatelyEquals(180, 1)
                             )
                         {
-                            if(x.obj.RemainingCastTime - y.obj.RemainingCastTime > 0.2f)
+                            if((x.obj.TotalCastTime - x.obj.CurrentCastTime) - (y.obj.TotalCastTime - y.obj.CurrentCastTime) > 0.2f)
                             {
                                 skip.Add(x.element.GUID);
                             }
-                            else if(!x.obj.RemainingCastTime.ApproximatelyEquals(y.obj.RemainingCastTime, 0.2f))
+                            else if(!(x.obj.TotalCastTime - x.obj.CurrentCastTime).ApproximatelyEquals((y.obj.TotalCastTime - y.obj.CurrentCastTime), 0.2f))
                             {
                                 skip.Add(y.element.GUID);
                             }

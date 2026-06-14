@@ -1,8 +1,8 @@
-﻿using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using ECommons.Configuration;
 using ECommons.GameFunctions;
-using ECommons.GameHelpers.LegacyPlayer;
+using ECommons.GameHelpers;
 using FFXIVClientStructs.FFXIV.Client.Game.Event;
 using Splatoon.Gui.Priority;
 using Splatoon.SplatoonScripting.Priority;

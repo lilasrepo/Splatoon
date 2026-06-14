@@ -1,5 +1,5 @@
-﻿using ECommons.DalamudServices;
-using Dalamud.Bindings.ImGui;
+using ECommons.DalamudServices;
+using ImGuiNET;
 using Splatoon.SplatoonScripting;
 using System.Collections.Generic;
 using Action = Lumina.Excel.Sheets.Action;

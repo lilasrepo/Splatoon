@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Dalamud.Game;
 using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Game.ClientState.Objects.SubKinds;
@@ -227,7 +227,7 @@ internal unsafe class ScriptEventLogger : SplatoonScript
                 {
                     PluginLog.Information(
                         $"OnObjectCreation: {gameObject.Name}({gameObject.Position})" +
-                        $"(GID: 0x{gameObject.GameObjectId:X8} DID: {gameObject.BaseId})");
+                        $"(GID: 0x{gameObject.GameObjectId:X8} DID: {gameObject.DataId})");
                 }
             }
         );

@@ -6,7 +6,7 @@ using ECommons.Configuration;
 using ECommons.GameFunctions;
 using ECommons.Hooks.ActionEffectTypes;
 using ECommons.ImGuiMethods;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Splatoon;
 using Splatoon.SplatoonScripting;
 using System.Numerics;

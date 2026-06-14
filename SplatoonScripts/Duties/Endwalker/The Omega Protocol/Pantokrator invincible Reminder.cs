@@ -1,9 +1,9 @@
-﻿using ECommons.Configuration;
+using ECommons.Configuration;
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
 using ECommons.SplatoonAPI;
 using ECommons.Throttlers;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Splatoon.SplatoonScripting;
 using System;
 using System.Collections.Generic;

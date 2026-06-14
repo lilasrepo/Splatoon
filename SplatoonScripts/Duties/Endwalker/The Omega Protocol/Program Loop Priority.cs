@@ -9,7 +9,7 @@ using ECommons.Hooks;
 using ECommons.ImGuiMethods;
 using ECommons.MathHelpers;
 using ECommons.Schedulers;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Splatoon.SplatoonScripting;
 using Splatoon.SplatoonScripting.Priority;
 using System;

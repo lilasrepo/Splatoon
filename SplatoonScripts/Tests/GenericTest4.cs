@@ -1,4 +1,4 @@
-﻿using Dalamud.Memory;
+using Dalamud.Memory;
 using Dalamud.Plugin;
 using ECommons;
 using ECommons.Automation;
@@ -12,7 +12,7 @@ using ECommons.UIHelpers;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Lumina.Excel.Sheets;
 using Splatoon.SplatoonScripting;
 using System;
