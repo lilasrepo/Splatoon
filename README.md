@@ -1,51 +1,54 @@
-﻿# Splatoon
-An accessibility tool to assist in gameplay and compensate for human imperfections.
-## Become a Supporter!
-If you like Splatoon or any of the other plugins I maintain, please consider becoming a supporter on Patreon or via other means! This will help me to continue updating Splatoon and work on new plugins and features.
-- [Subscribe on Patreon (Starts from $1)](https://subscribe.nightmarexiv.org/)
-- [One-time donation on Ko-Fi](https://donate.nightmarexiv.org/)
-- [Donate Litecoin, Bitcoin, Tether or other crypto](https://crypto.nightmarexiv.org/)
-## Key features
-- Put infinite amount of waymarks in the world with different shapes, colors, hit text, etc.
-- Create various trggers and conditions to display them in specific situations.
-- Quickly find objects around you using `/sf` command.
-- Create, import and share scripts - extensions of Splatoon, capable of doing pretty much any stuff that any Dalamud plugin can do, but in a much faster to create way and with a lot of helper objects provided. Ideal for creating so-called "microplugins" without hassle of creating full plugin just to do some small thing.
-- Use Web API to integrate Splatoon with other programs and ECommons Splatoon API to integrate it with other plugins.
+# Splatoon（繁中移植版 · TC12） / Traditional-Chinese Port
 
-## Important information
-- Splatoon is designed to operate primarily as an accessibility tool to compensate for people's imperfections.
-- By default, Splatoon comes with no presets or scripts preinstalled. It's on you to find and import ones that you want to use or create your own.
-- Imported presets will not update automatically. Should new version become available, you will have to update it yourself.
-- Imported (from official repo) scripts, however, will update automatically.
-- Splatoon only operates on a client side. Other players can not see and can not interact with your presets and scripts. Server can not check whether you are using Splatoon or not.
-- Splatoon only uses data you supply. Additionally, Splatoon uses only data that is available to you normally, without going beyond standard game client operations.
-- It is advised against streaming or screen sharing while using Splatoon.
-- Presets and scripts that can be used to deteriorate other player experience are not accepted.
+> 用無限、精準的標記重新定義 FFXIV 的導航。<br>
+> Redefining FFXIV navigation with unlimited, precise waymarks.
 
-## Commercial use prohibition
-- Except where explicitly authorized by the developer, any commercial use of Splatoon, including its presets and scripts, is prohibited. This applies to all presets and scripts, including those created by users. You may not sell or resell the plugin, its presets, or its scripts, nor may you create or operate environments in which access to such presets or scripts is restricted by payment.
+**繁體中文**：這是 **[Splatoon](https://github.com/PunishXIV/Splatoon)** 的繁體中文客戶端移植版，對應 **FFXIV 7.1 / yanmucorp Dalamud API12（.NET 9）**。本專案僅做相容性移植，**非官方、非原作維護**；所有原始功能與設計著作權歸原作者 **NightmareXIV**。
 
-## Navigation
-- [Official Splatoon presets and scripts and instruction about how to import, create and contribute them](https://github.com/PunishXIV/Splatoon/tree/main/Presets)
-- [Web API guide](https://github.com/PunishXIV/Splatoon/blob/main/docs/help/WebAPI.md)
+**English**: A Traditional-Chinese-client port of **[Splatoon](https://github.com/PunishXIV/Splatoon)** targeting **FFXIV 7.1 / yanmucorp Dalamud API12 (.NET 9)**. Compatibility port only — **unofficial and not maintained by the original author**. All original work © **NightmareXIV**.
 
-## Information for Chinese players
-Ottercorp's version currently blocks Splatoon and many other plugins from being loaded.
+---
 
-Just use Atmo's version of Xivlauncher instead: https://github.com/AtmoOmen/FFXIVQuickLauncher
-## This plugin is in development
-This means that there are still features that I would like to implement in future or features that I would like to enhance, as well as that I'm accepting suggestions and feature requests.
-## Installation
-1. Install [FFXIVQuickLauncher](https://github.com/goatcorp/FFXIVQuickLauncher?tab=readme-ov-file#xivlauncher-----) and enable Dalamud in it's settings. You have to run the game through FFXIVQuickLauncher in order for any of these plugins to work.
-2. Open Dalamud settings by typing `/xlsettings` in game chat.
-3. Go to "Experimental" tab.
-4. Find "Custom Plugin Repositories" section, agree with listed terms if needed and paste the following link into text input field: `https://love.puni.sh/ment.json`
-5. Click "Save" button.
+## 這是什麼 / About
 
-You should now have Puni.sh plugins available in your plugin installer. <br>
-Open plugin installer by typing `/xlplugins` in game chat, go to "Available plugins" section and search for a plugin you would like to install.
+強大的輔助工具，提供自訂標記系統：可建立無限數量的分組標記、文字標籤與角色指示物，並達到像素級精準度，讓關鍵物件與事件更容易辨識、反應更快。本身不附帶預設（preset），需自行建立或匯入。
 
-![image](https://github.com/NightmareXIV/MyDalamudPlugins/blob/main/meta/install/installerPunish.png?raw=true)
+A powerful accessibility tool with a custom waymark system — unlimited grouped waymarks, labels and actor indicators with pixel precision, making key objects and events easier to see and react to. Ships with no presets; create or import your own.
 
-## Support
-Join [Puni.sh Discord](https://discord.gg/Zzrcc8kmvy) to receive support for the plugin.
+## 安裝 / Installation
+
+**繁體中文**
+1. 使用 **XIVTCLauncher** 啟動繁體中文客戶端。
+2. 遊戲內輸入 `/xlsettings` → 切到 **Experimental** 分頁 → **Custom Plugin Repositories（自訂插件庫）**。
+3. 貼上下列網址並按 **+** 儲存：
+   ```
+   https://raw.githubusercontent.com/lilasrepo/DalamudPlugins/main/pluginmaster.json
+   ```
+4. 輸入 `/xlplugins`，搜尋 **Splatoon (TC12)** → 安裝 → 啟用。
+
+**English**
+1. Launch the Traditional-Chinese client with **XIVTCLauncher**.
+2. In-game, type `/xlsettings` → **Experimental** tab → **Custom Plugin Repositories**.
+3. Add this URL and save with **+**:
+   ```
+   https://raw.githubusercontent.com/lilasrepo/DalamudPlugins/main/pluginmaster.json
+   ```
+4. Type `/xlplugins`, search **Splatoon (TC12)** → Install → Enable.
+
+## 對應版本 / Compatibility
+
+| 項目 / Item | 版本 / Version |
+|---|---|
+| 遊戲 / Game | FFXIV 7.1（繁中客戶端 / TC client） |
+| Dalamud | yanmucorp API12（.NET 9） |
+| 移植自上游 / Ported from upstream | v3.9.2.3 |
+
+## 原作與授權 / Credits & License
+
+本專案 fork 自 **[PunishXIV/Splatoon](https://github.com/PunishXIV/Splatoon)**，授權沿用上游；所有原始功能著作權歸 **NightmareXIV**。<br>
+Forked from **[PunishXIV/Splatoon](https://github.com/PunishXIV/Splatoon)**. License follows upstream; all original work © **NightmareXIV**.
+
+## 免責聲明 / Disclaimer
+
+第三方插件，使用風險自負。**移植相關問題請回報到本 repo 的 Issues，請勿打擾上游原作者。**<br>
+Third-party plugin — use at your own risk. **For port-specific issues please open an Issue here; do not contact the upstream author.**
