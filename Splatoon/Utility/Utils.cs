@@ -5,6 +5,7 @@ using Dalamud.Utility;
 using ECommons;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
+using ECommons.Interop;
 using ECommons.LanguageHelpers;
 using ECommons.MathHelpers;
 using FFXIVClientStructs.FFXIV.Client.Game;
@@ -12,12 +13,14 @@ using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Common.Lua;
 using Newtonsoft.Json;
 using Splatoon.Memory;
+using Splatoon.RenderEngines;
 using Splatoon.Serializables;
 using Splatoon.Structures;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using TerraFX.Interop.Windows;
 using S = Splatoon.Services.S;
 #nullable enable
 
@@ -25,6 +28,20 @@ namespace Splatoon.Utility;
 
 public static unsafe class Utils
 {
+    public static void SetCursorTo(float refX, float refZ, float refY)
+    {
+        if(Utils.WorldToScreen(new Vector3(refX, refZ, refY), out var screenPos) && WindowFunctions.TryFindGameWindow(out var handle))
+        {
+            var point = new POINT() { x = (int)screenPos.X, y = (int)screenPos.Y };
+            //Chat.Print(point.X + "/" + point.Y);
+            if(TerraFX.Interop.Windows.Windows.ClientToScreen(handle, &point))
+            {
+                //Chat.Print(point.X + "/" + point.Y);
+                TerraFX.Interop.Windows.Windows.SetCursorPos(point.x, point.y);
+            }
+        }
+    }
+
     internal static void Reset()
     {
         var phase = Splatoon.P.Phase;
@@ -555,7 +572,7 @@ public static unsafe class Utils
     /// <param name="obj"></param>
     /// <param name="e"></param>
     /// <returns>Radians</returns>
-    public static float GetRotationWithOverride(this IGameObject obj, Element e)
+    public static float GetRotationWithOverride(this IGameObject obj, Layout l, Element e)
     {
         if(!e.RotationOverride)
         {
@@ -594,7 +611,33 @@ public static unsafe class Utils
         {
             return (180f + e.RotationOverrideAddAngle).DegToRad();
         }
-        return (180f - MathHelper.GetRelativeAngle(obj.Position.ToVector2(), e.RotationOverridePoint.ToVector2()) + e.RotationOverrideAddAngle).DegToRad();
+        Vector2 position;
+        if(e.RotationOverrideFaceMode)
+        {
+            var pos = CommonRenderUtils.GetPointsFromPlaceholderList(l, obj, e.RotationOverrideFaceModePlaceholders);
+            if(pos.Count == 0)
+            {
+                position = obj.Position.ToVector2();
+            }
+            else if(pos.Count == 1)
+            {
+                position = pos[0].ToVector2();
+            }
+            else
+            {
+                position = Vector2.Zero;
+                foreach(var x in pos)
+                {
+                    position += x.ToVector2();
+                }
+                position /= pos.Count;
+            }
+        }
+        else
+        {
+            position = e.RotationOverridePoint.ToVector2();
+        }
+        return (180f - MathHelper.GetRelativeAngle(obj.Position.ToVector2(), position) + e.RotationOverrideAddAngle).DegToRad();
     }
 
     public static void Migrate(this Layout l)
@@ -786,7 +829,7 @@ public static unsafe class Utils
                     }
                     P.Config.LayoutsL.Add(l);
                     CGui.ScrollTo = l;
-                    if(!silent) Notify.Success($"Layout version 2\n{l.GetName()}");
+                    if(!silent) Notify.Success($"Layout version 2\n{l.GetDisplayName()}");
                     layouts.Add(l);
                 }
                 else
@@ -895,7 +938,7 @@ public static unsafe class Utils
     public static void ExportToClipboard(this Layout l)
     {
         ImGui.SetClipboardText(l.Serialize());
-        Notify.Success($"{l.GetName()} copied to clipboard.");
+        Notify.Success($"{l.GetDisplayName()} copied to clipboard.");
     }
 
     public static string Serialize(this Layout l)
@@ -911,7 +954,21 @@ public static unsafe class Utils
 
     public static string Serialize(this Element l)
     {
-        return "~Ev2~" + JsonConvert.SerializeObject(l, Formatting.None, new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Ignore });
+        return JsonConvert.SerializeObject(l, Formatting.None, new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Ignore });
+    }
+
+    public static string GetDisplayName(this Layout l)
+    {
+        return $"{(l.Nodraw ? "Ø" : "")}{l.GetName()}";
+    }
+
+    public static bool ShouldSkipDraw(this Element e, Layout l)
+    {
+        if(l != null)
+        {
+            return l.Nodraw || e.Nodraw;
+        }
+        return e.Nodraw;
     }
 
     public static string GetName(this Layout l)

@@ -56,7 +56,7 @@ public sealed unsafe class DirectX11Renderer : RenderEngine
             cx = rotatedPoint.X;
             cy = rotatedPoint.Y;
         }
-        if(e.tether && !e.Nodraw && P.Draw)
+        if(e.tether && !e.ShouldSkipDraw(layout) && P.Draw)
         {
             Vector3 origin = new(cx, z + e.offZ, cy);
             var end = Utils.XZY(Utils.GetPlayerPositionXZY());
@@ -70,7 +70,7 @@ public sealed unsafe class DirectX11Renderer : RenderEngine
         {
             AddCapturedObject(layout, e, new Vector3(cx, z + e.offZ, cy));
         }
-        if(e.Nodraw || !P.Draw) return;
+        if(e.ShouldSkipDraw(layout) || !P.Draw) return;
         if(!LayoutUtils.ShouldDraw(cx, Utils.GetPlayerPositionXZY().X, cy, Utils.GetPlayerPositionXZY().Y)) return;
         if(r > 0)
         {
@@ -121,7 +121,7 @@ public sealed unsafe class DirectX11Renderer : RenderEngine
             {
                 AddCapturedObject(layout, e, new Vector3(center.X, center.Z, center.Y));
             }
-            if(e.Nodraw || !P.Draw) return;
+            if(e.ShouldSkipDraw(layout) || !P.Draw) return;
             if(!LayoutUtils.ShouldDraw(center.X, Utils.GetPlayerPositionXZY().X, center.Z, Utils.GetPlayerPositionXZY().Y)) return;
             float innerRadius = 0;
             var outerRadius = radius ?? e.radius;
@@ -130,7 +130,7 @@ public sealed unsafe class DirectX11Renderer : RenderEngine
                 innerRadius = outerRadius;
                 outerRadius = innerRadius + e.Donut;
             }
-            if(e.tether && !e.Nodraw && P.Draw)
+            if(e.tether && !e.ShouldSkipDraw(layout) && P.Draw)
             {
                 var end = Utils.XZY(Utils.GetPlayerPositionXZY());
                 if(e.ExtraTetherLength > 0)
@@ -156,7 +156,7 @@ public sealed unsafe class DirectX11Renderer : RenderEngine
                 {
                     AddCapturedObject(layout, e, new Vector3(pointA.X, pointA.Z, pointA.X));
                 }
-                if(e.Nodraw || !P.Draw) return;
+                if(e.ShouldSkipDraw(layout) || !P.Draw) return;
                 if(!LayoutUtils.ShouldDraw(pointA.X, Utils.GetPlayerPositionXZY().X, pointA.Y, Utils.GetPlayerPositionXZY().Y)
                     && !LayoutUtils.ShouldDraw(pointB.X, Utils.GetPlayerPositionXZY().X, pointB.Y, Utils.GetPlayerPositionXZY().Y)) return;
                 DisplayObjects.Add(new DisplayObjectLine(e.GetUniqueId(go), pointA.X, pointA.Y, pointA.Z,
@@ -180,7 +180,7 @@ public sealed unsafe class DirectX11Renderer : RenderEngine
                 {
                     AddCapturedObject(layout, e, new Vector3(start.X, start.Z, start.X));
                 }
-                if(e.Nodraw || !P.Draw) return;
+                if(e.ShouldSkipDraw(layout) || !P.Draw) return;
 
                 if(!LayoutUtils.ShouldDraw(start.X, Utils.GetPlayerPositionXZY().X, start.Y, Utils.GetPlayerPositionXZY().Y)
                     && !LayoutUtils.ShouldDraw(stop.X, Utils.GetPlayerPositionXZY().X, stop.Y, Utils.GetPlayerPositionXZY().Y)) return;
@@ -199,7 +199,7 @@ public sealed unsafe class DirectX11Renderer : RenderEngine
                 {
                     AddCapturedObject(layout, e, new Vector3(pointA.X, pointA.Z, pointA.X));
                 }
-                if(e.Nodraw || !P.Draw) return;
+                if(e.ShouldSkipDraw(layout) || !P.Draw) return;
                 if(!LayoutUtils.ShouldDraw(pointA.X, Utils.GetPlayerPositionXZY().X, pointA.Y, Utils.GetPlayerPositionXZY().Y)
                     && !LayoutUtils.ShouldDraw(pointB.X, Utils.GetPlayerPositionXZY().X, pointB.Y, Utils.GetPlayerPositionXZY().Y)) return;
                 DisplayObjects.Add(new DisplayObjectLine(e.GetUniqueId(go), pointA.X, pointA.Y, pointA.Z,
@@ -221,7 +221,7 @@ public sealed unsafe class DirectX11Renderer : RenderEngine
                 {
                     AddCapturedObject(layout, e, new Vector3(start.X, start.Z, start.X));
                 }
-                if(e.Nodraw || !P.Draw) return;
+                if(e.ShouldSkipDraw(layout) || !P.Draw) return;
 
                 if(!LayoutUtils.ShouldDraw(start.X, Utils.GetPlayerPositionXZY().X, start.Y, Utils.GetPlayerPositionXZY().Y)
                     && !LayoutUtils.ShouldDraw(stop.X, Utils.GetPlayerPositionXZY().X, stop.Y, Utils.GetPlayerPositionXZY().Y)) return;
@@ -259,16 +259,16 @@ public sealed unsafe class DirectX11Renderer : RenderEngine
                 if(element.type == 1)
                 {
                     var pointPos = Utils.GetPlayerPositionXZY();
-                    DrawCircle(layout, element, pointPos.X, pointPos.Y, pointPos.Z, radius, element.includeRotation ? BasePlayer.GetRotationWithOverride(element) : 0f,
+                    DrawCircle(layout, element, pointPos.X, pointPos.Y, pointPos.Z, radius, element.includeRotation ? BasePlayer.GetRotationWithOverride(layout, element) : 0f,
                         BasePlayer);
                 }
                 else if(element.type == 3)
                 {
-                    AddRotatedLine(layout, Utils.GetPlayerPositionXZY(), BasePlayer.GetRotationWithOverride(element), element, radius, 0f, BasePlayer);
+                    AddRotatedLine(layout, Utils.GetPlayerPositionXZY(), BasePlayer.GetRotationWithOverride(layout, element), element, radius, 0f, BasePlayer);
                 }
                 else if(element.type == 4)
                 {
-                    DrawCone(layout, element, Utils.GetPlayerPositionXZY(), radius, BasePlayer.GetRotationWithOverride(element), BasePlayer);
+                    DrawCone(layout, element, Utils.GetPlayerPositionXZY(), radius, BasePlayer.GetRotationWithOverride(layout, element), BasePlayer);
                 }
             }
             else if(element.refActorType == 2 && Svc.Targets.Target != null
@@ -281,7 +281,7 @@ public sealed unsafe class DirectX11Renderer : RenderEngine
                     if(element.type == 1)
                     {
                         DrawCircle(layout, element, Svc.Targets.Target.GetPositionXZY().X, Svc.Targets.Target.GetPositionXZY().Y,
-                            Svc.Targets.Target.GetPositionXZY().Z, radius, element.includeRotation ? Svc.Targets.Target.GetRotationWithOverride(element) : 0f,
+                            Svc.Targets.Target.GetPositionXZY().Z, radius, element.includeRotation ? Svc.Targets.Target.GetRotationWithOverride(layout, element) : 0f,
                             Svc.Targets.Target);
                     }
                     else if(element.type == 3)
@@ -300,7 +300,7 @@ public sealed unsafe class DirectX11Renderer : RenderEngine
                         }
                         else
                         {
-                            var angle = Svc.Targets.Target.GetRotationWithOverride(element);
+                            var angle = Svc.Targets.Target.GetRotationWithOverride(layout, element);
                             AddRotatedLine(layout, Svc.Targets.Target.GetPositionXZY(), angle, element, radius, Svc.Targets.Target.HitboxRadius, Svc.Targets.Target);
                         }
                     }
@@ -320,7 +320,7 @@ public sealed unsafe class DirectX11Renderer : RenderEngine
                         }
                         else
                         {
-                            var baseAngle = Svc.Targets.Target.GetRotationWithOverride(element);
+                            var baseAngle = Svc.Targets.Target.GetRotationWithOverride(layout, element);
                             DrawCone(layout, element, Svc.Targets.Target.GetPositionXZY(), radius, baseAngle, Svc.Targets.Target);
                         }
                     }
@@ -353,7 +353,7 @@ public sealed unsafe class DirectX11Renderer : RenderEngine
                         if(element.type == 1)
                         {
                             DrawCircle(layout, element, obj.GetPositionXZY().X, obj.GetPositionXZY().Y, obj.GetPositionXZY().Z, aradius,
-                                element.includeRotation ? obj.GetRotationWithOverride(element) : 0f,
+                                element.includeRotation ? obj.GetRotationWithOverride(layout, element) : 0f,
                                 obj);
                         }
                         else if(element.type == 3)
@@ -372,7 +372,7 @@ public sealed unsafe class DirectX11Renderer : RenderEngine
                             }
                             else
                             {
-                                var angle = obj.GetRotationWithOverride(element);
+                                var angle = obj.GetRotationWithOverride(layout, element);
                                 AddRotatedLine(layout, obj.GetPositionXZY(), angle, element, aradius, obj.HitboxRadius, obj);
                             }
 
@@ -393,7 +393,7 @@ public sealed unsafe class DirectX11Renderer : RenderEngine
                             }
                             else
                             {
-                                var baseAngle = obj.GetRotationWithOverride(element);
+                                var baseAngle = obj.GetRotationWithOverride(layout, element);
                                 DrawCone(layout, element, obj.GetPositionXZY(), aradius, baseAngle, obj);
                             }
                         }

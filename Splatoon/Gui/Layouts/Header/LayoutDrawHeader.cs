@@ -1,15 +1,10 @@
 ﻿using Dalamud.Interface.Components;
-using ECommons.Automation;
-using ECommons.Configuration;
 using ECommons.ExcelServices;
 using ECommons.LanguageHelpers;
-using Lumina.Excel.Sheets;
 using Newtonsoft.Json;
 using Splatoon.ConfigGui;
 using Splatoon.ConfigGui.CGuiLayouts.LayoutDrawHeader.Subcommands;
 using Splatoon.Gui.Layouts.Header.Sections;
-using Splatoon.Utility;
-using System.Runtime.CompilerServices;
 using Action = Lumina.Excel.Sheets.Action;
 
 namespace Splatoon;
@@ -90,7 +85,7 @@ internal partial class CGui
                 foreach(var e in layout.ElementsL)
                 {
                     if(IsKeyPressed(ECommons.WindowsFormsReflector.Keys.Shift) && !e.Enabled) continue;
-                    sb.AppendLine(EzConfig.DefaultSerializationFactory.Serialize(e, false));
+                    sb.AppendLine(e.Serialize());
                 }
                 Copy(sb.ToString());
             }
@@ -157,6 +152,12 @@ internal partial class CGui
             ImGui.TableNextColumn();
             ImGuiEx.SetNextItemFullWidth();
             layout.InternationalName.ImGuiEdit(ref layout.Name);
+
+            ImGui.TableNextColumn();
+            ImGuiEx.TextV("No draw:".Loc());
+            ImGui.TableNextColumn();
+            ImGui.Checkbox("##nodraw", ref layout.Nodraw);
+            ImGuiEx.HelpMarker("Layout won't be rendered. It will still be processed.");
 
             ImGui.TableNextColumn();
             ImGuiEx.TextV("Display conditions:".Loc());
@@ -231,10 +232,10 @@ internal partial class CGui
             ImGui.TableNextColumn();
             ImGui.Checkbox("Freeze".Loc(), ref layout.Freezing);
             ImGuiComponents.HelpMarker(
-@"Freeze is an advanced setting that can have negative side effects.
-When the requirements to display an element are met,
-a new element is created and frozen in place and displayed for a duration.
-New frozen elements are created every refreeze interval.".Loc());
+                @"Freeze is an advanced setting that can have negative side effects.
+                When the requirements to display an element are met,
+                a new element is created and frozen in place and displayed for a duration.
+                New frozen elements are created every refreeze interval.".Loc());
             ImGui.TableNextColumn();
             layout.DrawFreezing();
 
