@@ -14,8 +14,11 @@ using ECommons.Hooks.ActionEffectTypes;
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
 using ECommons.MathHelpers;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using Lumina.Excel.Sheets;
 using Newtonsoft.Json;
+using Splatoon;
+using Splatoon.Memory;
 using Splatoon.SplatoonScripting;
 using Splatoon.Utility;
 using System;
@@ -29,13 +32,15 @@ namespace SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad;
 
 public class P4_Debuff_Reminder : SplatoonScript<P4_Debuff_Reminder.Config>
 {
-    public override Metadata Metadata { get; } = new(10, "NightmareXIV, mirage");
+    public override Metadata Metadata { get; } = new(13, "NightmareXIV, mirage");
     public override HashSet<uint>? ValidTerritories { get; } = [1363];
 
     private List<string> VfxLie = ["vfx/common/eff/z3oy_stlp6_c0c.avfx", "vfx/common/eff/z3oy_stlp4_c0c.avfx"];
     private List<string> VfxTruth = ["vfx/common/eff/z3oy_stlp7_c0c.avfx", "vfx/common/eff/z3oy_stlp5_c0c.avfx"];
     private record struct StatusInfo(uint objectId, uint statusId);
     private List<StatusInfo> FakeStatuses = [];
+    Dictionary<(string, UIColor), List<string>> OtherInfoQueue = [];
+    bool PhaseActive => Svc.Objects.Any(x => x.DataId == 18475 && x.IsTargetable);
 
     public class Debuffs
     {
@@ -108,10 +113,10 @@ public class P4_Debuff_Reminder : SplatoonScript<P4_Debuff_Reminder.Config>
     public override void OnSetup()
     {
         Controller.RegisterElementFromCode("Black", """
-            {"Name":"","type":3,"refY":40.0,"radius":12,"fillIntensity":0.6,"refActorNPCNameID":6055,"refActorRequireCast":true,"refActorCastId":[50069],"refActorComparisonType":6,"includeRotation":true}
+            {"Name":"","type":3,"refY":40.0,"radius":10.5,"fillIntensity":0.6,"refActorNPCNameID":6055,"refActorRequireCast":true,"refActorCastId":[50069],"refActorComparisonType":6,"includeRotation":true}
             """);
         Controller.RegisterElementFromCode("White", """
-            {"Name":"","type":3,"refY":40.0,"radius":12,"fillIntensity":0.6,"refActorNPCNameID":6055,"refActorRequireCast":true,"refActorCastId":[50068],"refActorComparisonType":6,"includeRotation":true}
+            {"Name":"","type":3,"refY":40.0,"radius":10.5,"fillIntensity":0.6,"refActorNPCNameID":6055,"refActorRequireCast":true,"refActorCastId":[50068],"refActorComparisonType":6,"includeRotation":true}
             """);
         Controller.RegisterElementsFromMultilineCode("""
             {"Name":"LookAway","type":1,"radius":0.0,"fillIntensity":0.5,"overlayBGColor":2550136832,"overlayTextColor":4278190335,"thicc":3.0,"overlayText":"LOOK AWAY","refActorName":"*","refActorRequireBuff":true,"refActorBuffId":[5543],"refActorUseBuffTime":true,"refActorBuffTimeMax":15.0,"tether":true,"overlayVOffset":2.0}
@@ -165,9 +170,24 @@ public class P4_Debuff_Reminder : SplatoonScript<P4_Debuff_Reminder.Config>
     public override void OnUpdate()
     {
         Controller.Hide();
-        if(Controller.GetPartyMembers().Any(x => x.HasStatus([1602, 1603])))
+        if(!PhaseActive)
         {
             return;
+        }
+
+        if(OtherInfoQueue.Count > 0)
+        {
+            foreach(var x in OtherInfoQueue)
+            {
+                if(x.Value.Contains(BasePlayer.Name.ToString()))
+                {
+                    var index = x.Value.IndexOf(BasePlayer.Name.ToString());
+                    x.Value.RemoveAt(index);
+                    x.Value.Insert(0, $"[>[{BasePlayer.Name} (YOU)]<]");
+                }
+                this.Print(x.Key.Item2, x.Key.Item1.Replace("$", x.Value.Print()));
+            }
+            OtherInfoQueue.Clear();
         }
 
         if(BasePlayer.HasStatus([.. Debuffs.DebuffWhitewould, .. Debuffs.DebuffBlackwound], out var status))
@@ -325,6 +345,7 @@ public class P4_Debuff_Reminder : SplatoonScript<P4_Debuff_Reminder.Config>
     {
         IsTruth.Clear();
         FakeStatuses.Clear();
+        OtherInfoQueue.Clear();
     }
 
     public override void OnVFXSpawn(uint target, string vfxPath)
@@ -354,6 +375,7 @@ public class P4_Debuff_Reminder : SplatoonScript<P4_Debuff_Reminder.Config>
 
     public override void OnGainBuffEffect(uint sourceId, FFXIVClientStructs.FFXIV.Client.Game.Status Status)
     {
+        if(!PhaseActive) return;
         if(DebuffList.Contains(Status.StatusId) && sourceId.TryGetPlayer(out var pc))
         {
             if(IsLie)
@@ -362,36 +384,107 @@ public class P4_Debuff_Reminder : SplatoonScript<P4_Debuff_Reminder.Config>
             }
             if(pc.AddressEquals(BasePlayer))
             {
+                if(!C.ShowOthers)
+                {
+                    if((Debuffs.DebuffSpread.Contains(Status.StatusId) && !IsLie) || (Debuffs.DebuffStack.Contains(Status.StatusId) && IsLie))
+                    {
+                        if(Status.RemainingTime > 60f)
+                        {
+                            if(C.UseSelfmark && C.MarkingParamLongSpread != 0)
+                            {
+                                if(GenericHelpers.IsScreenReady() && EzThrottler.Throttle("Chat", 1000))
+                                {
+                                    var cmd = $"/marking {TextCommandParam.Get(C.MarkingParamLongSpread).Param.GetText()} <me>";
+                                    UseCommand(cmd);
+                                }
+                            }
+                            if(C.OutputInChat)
+                            {
+                                Print(UIColor.Orange, C.LongSpread.Get());
+                            }
+                        }
+                        else
+                        {
+                            if(C.UseSelfmark && C.MarkingParamShortSpread != 0)
+                            {
+                                if(GenericHelpers.IsScreenReady() && EzThrottler.Throttle("Chat", 1000))
+                                {
+                                    var cmd = $"/marking {TextCommandParam.Get(C.MarkingParamShortSpread).Param.GetText()} <me>";
+                                    UseCommand(cmd);
+                                }
+                            }
+                            if(C.OutputInChat)
+                            {
+                                Print(UIColor.Orange, C.ShortSpread.Get());
+                            }
+                        }
+                    }
+
+                    if(Debuffs.DebuffLookAway.Contains(Status.StatusId))
+                    {
+                        if(Status.RemainingTime > 65f)
+                        {
+                            if(C.OutputInChat)
+                            {
+                                Print(!IsLie ? UIColor.Red : (UIColor)16, IsLie ? C.LongGazeInv.Get() : C.LongGaze.Get());
+                            }
+                        }
+                        else
+                        {
+                            if(C.OutputInChat)
+                            {
+                                Print(!IsLie ? UIColor.Red : (UIColor)16, IsLie ? C.ShortGazeInv.Get() : C.ShortGaze.Get());
+                            }
+                        }
+                    }
+
+                    if(Debuffs.DebuffDontMove.Contains(Status.StatusId))
+                    {
+                        if(C.OutputInChat)
+                        {
+                            Print(!IsLie ? UIColor.Yellow : (UIColor)506, IsLie ? C.AccelerationBombInv.Get() : C.AccelerationBomb.Get());
+                        }
+                    }
+                }
+
+                if(Debuffs.DebuffFireSpread.Contains(Status.StatusId))
+                {
+                    if(C.OutputInChat)
+                    {
+                        Print(!IsLie ? (UIColor)557 : (UIColor)563, IsLie ? C.FireIsDonut.Get() : C.FireIsAOE.Get());
+                    }
+                }
+
+                if(Debuffs.DebuffDonut.Contains(Status.StatusId))
+                {
+                    if(C.OutputInChat)
+                    {
+                        Print(!IsLie ? (UIColor)553 : (UIColor)555, IsLie ? C.WaterIsAOE.Get() : C.WaterIsDonut.Get());
+                    }
+                }
+            }
+            if(C.ShowOthers)
+            {
+                void enqueue(UIColor color, string text, string name)
+                {
+                    var list = this.OtherInfoQueue.GetOrCreate((text, color));
+                    list.Add(name);
+                    FrameThrottler.Throttle("InfoQueue", 4, true);
+                }
                 if((Debuffs.DebuffSpread.Contains(Status.StatusId) && !IsLie) || (Debuffs.DebuffStack.Contains(Status.StatusId) && IsLie))
                 {
                     if(Status.RemainingTime > 60f)
                     {
-                        if(C.UseSelfmark && C.MarkingParamLongSpread != 0)
-                        {
-                            if(GenericHelpers.IsScreenReady() && EzThrottler.Throttle("Chat", 1000))
-                            {
-                                var cmd = $"/marking {TextCommandParam.Get(C.MarkingParamLongSpread).Param.GetText()} <me>";
-                                UseCommand(cmd);
-                            }
-                        }
                         if(C.OutputInChat)
                         {
-                            Print(UIColor.Orange, "LONG SPREAD on YOU!");
+                            enqueue(UIColor.Orange, C.Other_LongSpread.Get(), $"{pc.Name}");
                         }
                     }
                     else
                     {
-                        if(C.UseSelfmark && C.MarkingParamShortSpread != 0)
-                        {
-                            if(GenericHelpers.IsScreenReady() && EzThrottler.Throttle("Chat", 1000))
-                            {
-                                var cmd = $"/marking {TextCommandParam.Get(C.MarkingParamShortSpread).Param.GetText()} <me>";
-                                UseCommand(cmd);
-                            }
-                        }
                         if(C.OutputInChat)
                         {
-                            Print(UIColor.Orange, "SHORT SPREAD on YOU!");
+                            enqueue(UIColor.Orange, C.Other_ShortSpread.Get(), $"{pc.Name}");
                         }
                     }
                 }
@@ -402,14 +495,14 @@ public class P4_Debuff_Reminder : SplatoonScript<P4_Debuff_Reminder.Config>
                     {
                         if(C.OutputInChat)
                         {
-                            Print(UIColor.Red, $"LONG GAZE on YOU (Look {(IsLie ? "At" : "Away")})");
+                            enqueue(!IsLie?UIColor.Red:(UIColor)16, (IsLie ? C.Other_LongGazeInv.Get() : C.Other_LongGaze.Get()), $"{pc.Name}");
                         }
                     }
                     else
                     {
                         if(C.OutputInChat)
                         {
-                            Print(UIColor.Red, $"SHORT GAZE on YOU (Look {(IsLie ? "At" : "Away")})");
+                            enqueue(!IsLie ? UIColor.Red : (UIColor)16, (IsLie ? C.Other_ShortGazeInv.Get() : C.Other_ShortGaze.Get()), $"{pc.Name}");
                         }
                     }
                 }
@@ -418,7 +511,7 @@ public class P4_Debuff_Reminder : SplatoonScript<P4_Debuff_Reminder.Config>
                 {
                     if(C.OutputInChat)
                     {
-                        Print(UIColor.Yellow, IsLie ? "Inverted acceleration bomb on YOU (MOVE)" : "Acceleration bomb on YOU (DON'T MOVE)");
+                        enqueue(!IsLie ? UIColor.Yellow : (UIColor)506, (IsLie ? C.Other_AccelerationBombInv.Get() : C.Other_AccelerationBomb.Get()), $"{pc.Name}");
                     }
                 }
             }
@@ -473,6 +566,7 @@ public class P4_Debuff_Reminder : SplatoonScript<P4_Debuff_Reminder.Config>
             ImGui.Indent();
             ImGui.SetNextItemWidth(200f);
             ImGuiEx.EnumCombo("Override chat channel (it will NOT send it to that channel, still local only, only affects visual)", ref C.OverrideChatType);
+            ImGui.Checkbox("Also output other player debuffs for callouts (text still visible for you only)", ref C.ShowOthers);
             ImGui.Unindent();
         }
         ImGuiEx.Checkbox("Self-mark spreads (dangerous)", ref C.UseSelfmark, enabled: C.UseSelfmark || ImGuiEx.Ctrl);
@@ -491,6 +585,47 @@ public class P4_Debuff_Reminder : SplatoonScript<P4_Debuff_Reminder.Config>
         ImGuiEx.SliderFloat($"Display look/don't look in advance, seconds", ref C.LookDontlookTH, 3, 20);
         ImGui.SetNextItemWidth(150f);
         ImGuiEx.SliderFloat($"Display donut/AOE placement in advance, seconds", ref C.LookDontlookTH, 3, 20);
+        ImGui.Separator();
+        ImGui.SetNextItemWidth(200f);
+        C.AccelerationBomb.ImGuiEditNoDefault();
+        ImGui.SameLine();
+        ImGuiEx.Text("Acceleration bomb, normal");
+
+        ImGui.SetNextItemWidth(200f);
+        C.AccelerationBombInv.ImGuiEditNoDefault();
+        ImGui.SameLine();
+        ImGuiEx.Text("Acceleration bomb, inverted");
+
+        ImGui.SetNextItemWidth(200f);
+        C.LongGaze.ImGuiEditNoDefault();
+        ImGui.SameLine();
+        ImGuiEx.Text("Long gaze (away)");
+
+        ImGui.SetNextItemWidth(200f);
+        C.LongGazeInv.ImGuiEditNoDefault();
+        ImGui.SameLine();
+        ImGuiEx.Text("Long gaze (at)");
+
+        ImGui.SetNextItemWidth(200f);
+        C.ShortGaze.ImGuiEditNoDefault();
+        ImGui.SameLine();
+        ImGuiEx.Text("Short gaze (away)");
+
+        ImGui.SetNextItemWidth(200f);
+        C.ShortGazeInv.ImGuiEditNoDefault();
+        ImGui.SameLine();
+        ImGuiEx.Text("Short gaze (at)");
+
+        ImGui.SetNextItemWidth(200f);
+        C.LongSpread.ImGuiEditNoDefault();
+        ImGui.SameLine();
+        ImGuiEx.Text("Long spread");
+
+        ImGui.SetNextItemWidth(200f);
+        C.ShortSpread.ImGuiEditNoDefault();
+        ImGui.SameLine();
+        ImGuiEx.Text("Short spread");
+
 
         if(ImGui.CollapsingHeader("Debug"))
         {
@@ -508,6 +643,14 @@ public class P4_Debuff_Reminder : SplatoonScript<P4_Debuff_Reminder.Config>
             ImGuiEx.Text($"List: {DebuffList.Print()}");
             ImGuiEx.Text($"Casters: {IsTruth.Select(x => $"{x.Key}: {x.Value}").Print("\n")}");
             ImGuiEx.Text($"Fakes: \n{FakeStatuses.Select(x => $"{x.objectId.GetObject()} / {x.statusId} ({Svc.Data.GetExcelSheet<Status>().GetRowOrDefault(x.statusId)?.Name})").Print("\n")}");
+        }
+    }
+
+    public override unsafe void OnStartingCast(uint sourceId, PacketActorCast* packet)
+    {
+        if(packet->ActionType == (byte)ActionType.Action && packet->ActionID == 49884)
+        {
+            Controller.Reset();
         }
     }
 
@@ -546,6 +689,30 @@ public class P4_Debuff_Reminder : SplatoonScript<P4_Debuff_Reminder.Config>
         public bool UseSelfmark = false;
         public bool OutputInChat = true;
         public XivChatType OverrideChatType = XivChatType.None;
+        public InternationalString AccelerationBomb = new(en: "Acceleration bomb on YOU (DON'T MOVE)", jp: "加速度　とまる");
+        public InternationalString AccelerationBombInv = new(en: "Inverted acceleration bomb on YOU (MOVE)", jp: "加速度　うごく");
+        public InternationalString LongGaze = new(en: "LONG GAZE on YOU (Look Away)", jp: "遅　視線　みない");
+        public InternationalString LongGazeInv = new(en: "LONG GAZE on YOU (Look At)", jp: "遅　視線　みる");
+        public InternationalString ShortGaze = new(en: "SHORT GAZE on YOU (Look Away)", jp: "早　視線　みない");
+        public InternationalString ShortGazeInv = new(en: "SHORT GAZE on YOU (Look At)", jp: "早　視線　みる");
+        public InternationalString LongSpread = new(en:"LONG SPREAD on YOU", jp: "遅　散開");
+        public InternationalString ShortSpread = new(en: "SHORT SPREAD on YOU", jp: "早　散開");
+        public InternationalString FireIsAOE = new(en: "- Fire is AOE (real)");
+        public InternationalString FireIsDonut = new(en: "- Fire is Donut (fake)");
+        public InternationalString WaterIsAOE = new(en: "- Water is AOE (fake)");
+        public InternationalString WaterIsDonut = new(en: "- Water is Donut (real)");
+
+
+        public InternationalString Other_AccelerationBomb = new(en: "> Acceleration bomb on $ (DON'T MOVE)");
+        public InternationalString Other_AccelerationBombInv = new(en: "> Inverted acceleration bomb on $ (MOVE)");
+        public InternationalString Other_LongGaze = new(en: "> LONG GAZE on $ (Look Away)");
+        public InternationalString Other_LongGazeInv = new(en: "> LONG GAZE on $ (Look At)");
+        public InternationalString Other_ShortGaze = new(en: "> SHORT GAZE on $ (Look Away)");
+        public InternationalString Other_ShortGazeInv = new(en: "> SHORT GAZE on $ (Look At)");
+        public InternationalString Other_LongSpread = new(en: "> LONG SPREAD on $");
+        public InternationalString Other_ShortSpread = new(en: "> SHORT SPREAD on $");
+
+        public bool ShowOthers = false;
     }
 
     private uint[] ValidTextParams = [80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 476, 478, 480,];

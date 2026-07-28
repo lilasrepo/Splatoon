@@ -8,6 +8,7 @@ using Splatoon.RenderEngines;
 using Splatoon.Serializables;
 using Splatoon.SplatoonScripting;
 using Splatoon.SplatoonScripting.Priority;
+using Splatoon.Structures;
 using System.Collections.Specialized;
 using System.Threading;
 
@@ -30,6 +31,7 @@ internal class Configuration : IEzConfig
 
     public bool DX11EnabledOnMacLinux = false;
     public bool DX11MacLinuxWarningHidden = false;
+    public bool NoChat = false;
 
     public RenderEngineKind RenderEngineKind = RenderEngineKind.DirectX11;
     public HashSet<RenderEngineKind> EnabledRenderers = [RenderEngineKind.ImGui_Legacy, RenderEngineKind.DirectX11];
@@ -123,6 +125,14 @@ internal class Configuration : IEzConfig
     public bool OrderScriptsByZone = true;
     public uint FilteredTerritoryLayout = 0;
     public string Alias = "";
+    public float AttentionFontSize = 1f;
+    public WindowBasePosition AttentionBasePositionX = WindowBasePosition.Middle;
+    public WindowBasePosition AttentionBasePositionY = WindowBasePosition.Start;
+    public Vector2 AttentionBaseOffset = default;
+    public bool AttentionNoAnimate = false;
+    public HashSet<string> DisabledAttentionWindowScripts = [];
+
+    public PointerLineStyle DefaultPointerLineStyle = PointerLineStyle.Default;
 
     public uint ClampFillColorAlpha(uint fillColor)
     {
@@ -145,6 +155,7 @@ internal class Configuration : IEzConfig
             plugin.ConfigGui.IsOpen = true;
         };
         NuiTools.SetState(NightmareUIState);
+        this.DefaultPointerLineStyle.EnsureDefaults();
     }
 
     public void Save(bool suppressError = false)

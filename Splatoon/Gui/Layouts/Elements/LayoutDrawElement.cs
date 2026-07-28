@@ -399,15 +399,18 @@ internal unsafe partial class CGui
                     }
                     if(ImGui.BeginPopup("PlaceholderFastSelect"))
                     {
-                        for(var s = 1; s <= 8; s++)
+                        foreach(var option in FaceOptions)
                         {
-                            if(ImGui.Selectable($"<{s}>", el.refActorPlaceholder.Contains("<{s}>"), ImGuiSelectableFlags.DontClosePopups)) el.refActorPlaceholder.Toggle($"<{s}>");
+                            if(ImGui.Selectable(option, el.refActorPlaceholder.Contains(option), ImGuiSelectableFlags.DontClosePopups))
+                            {
+                                el.refActorPlaceholder.Toggle(option);
+                            }
                         }
                         if(ImGui.Selectable("2-8", false, ImGuiSelectableFlags.DontClosePopups))
                         {
                             for(var s = 2; s <= 8; s++)
                             {
-                                el.refActorPlaceholder.Add($"<{s}>");
+                                el.refActorPlaceholder.AddIfNotExist($"<{s}>");
                             }
                         }
                         ImGui.EndPopup();
@@ -1167,7 +1170,17 @@ internal unsafe partial class CGui
             ImGui.SameLine();
             this.DrawVector3OrPlaceholder("offX", null, ref el.UsePlaceholderAsOffPosition, el.PlaceholdersOffPosition, ref el.offX, ref el.offY, ref el.offZ, el, nameof(el.offX), nameof(el.offY), nameof(el.offZ), el.type == 2, el.type == 2, true);
             
-            if((el.type == 3) && el.refActorType != 1)
+            if(el.type == 2 || el.type == 3)
+            {
+                ImGuiUtils.SizedText("", WidthElement);
+                ImGui.SameLine();
+                if(ImGuiEx.IconButtonWithText(FontAwesomeIcon.ArrowsUpDown, "Swap A and B"))
+                {
+                    (el.RefPosition, el.OffPosition) = (el.OffPosition, el.RefPosition);
+                }
+            }
+
+                if((el.type == 3) && el.refActorType != 1)
             {
                 ImGuiUtils.SizedText("", WidthElement);
                 ImGui.SameLine();
@@ -1443,6 +1456,18 @@ internal unsafe partial class CGui
                     ImGui.SameLine();
                     ImGui.Checkbox("Enable placeholders".Loc(), ref el.overlayPlaceholders);
                 }
+            }
+        }
+
+        if(!el.Nodraw && el.type == 2 && el.radius == 0)
+        {
+            ImGuiUtils.SizedText("Pointer Line:", WidthElement);
+            ImGui.SameLine();
+            ImGui.Checkbox("##pline", ref el.EnablePointerLine);
+            if(el.EnablePointerLine)
+            {
+                ImGui.SameLine();
+                el.PointerLineStyle.DrawEditor();
             }
         }
 

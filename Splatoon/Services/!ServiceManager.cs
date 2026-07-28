@@ -25,4 +25,6 @@ public static class S
     // internal static ObjectEffectProcessor ObjectEffectProcessor { get; private set; } // TODO(api12): processor disabled (game-7.5 hook signature)
     internal static PinnedLayoutEdit PinnedLayoutEdit { get; private set; }
     internal static AliasManager AliasManager { get; private set; }
+    internal static AttentionOverlayWindow AttentionOverlayWindow { get; private set; }
+    internal static MessageService MessageService { get; private set; }
 }

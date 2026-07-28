@@ -17,7 +17,6 @@ using System.Linq;
 using System.Numerics;
 using Element = Splatoon.Element;
 using Player = ECommons.GameHelpers.LegacyPlayer.Player;
-using ECommons.GameHelpers.LegacyPlayer;
 
 using ECommons.DalamudServices.Legacy;
 

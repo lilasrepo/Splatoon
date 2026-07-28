@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WrathCombo.API", "WrathComb
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoRetainerAPI", "AutoRetainerAPI\AutoRetainerAPI\AutoRetainerAPI.csproj", "{FD667165-D01D-9ACE-56EA-E5EEDB568C76}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SplatoonScriptsDev", "..\SplatoonScriptsDev\SplatoonScriptsDev\SplatoonScriptsDev.csproj", "{378B806E-C8A7-014B-D487-33035FBB897C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +74,7 @@ Global
 		{831BCA8E-718C-4537-9282-D1FB3873AC05}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{831BCA8E-718C-4537-9282-D1FB3873AC05}.Debug|x64.Build.0 = Debug|Any CPU
 		{831BCA8E-718C-4537-9282-D1FB3873AC05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{831BCA8E-718C-4537-9282-D1FB3873AC05}.Release|Any CPU.Build.0 = Release|Any CPU
 		{831BCA8E-718C-4537-9282-D1FB3873AC05}.Release|x64.ActiveCfg = Release|Any CPU
 		{831BCA8E-718C-4537-9282-D1FB3873AC05}.Release|x64.Build.0 = Release|Any CPU
 		{0AEC5DEE-DBF9-46CD-B71B-A61C2BBB04BD}.Debug|Any CPU.ActiveCfg = Debug|x64
@@ -106,6 +109,13 @@ Global
 		{FD667165-D01D-9ACE-56EA-E5EEDB568C76}.Release|Any CPU.Build.0 = Release|x64
 		{FD667165-D01D-9ACE-56EA-E5EEDB568C76}.Release|x64.ActiveCfg = Release|x64
 		{FD667165-D01D-9ACE-56EA-E5EEDB568C76}.Release|x64.Build.0 = Release|x64
+		{378B806E-C8A7-014B-D487-33035FBB897C}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{378B806E-C8A7-014B-D487-33035FBB897C}.Debug|Any CPU.Build.0 = Debug|x64
+		{378B806E-C8A7-014B-D487-33035FBB897C}.Debug|x64.ActiveCfg = Debug|x64
+		{378B806E-C8A7-014B-D487-33035FBB897C}.Debug|x64.Build.0 = Debug|x64
+		{378B806E-C8A7-014B-D487-33035FBB897C}.Release|Any CPU.ActiveCfg = Release|x64
+		{378B806E-C8A7-014B-D487-33035FBB897C}.Release|x64.ActiveCfg = Release|x64
+		{378B806E-C8A7-014B-D487-33035FBB897C}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

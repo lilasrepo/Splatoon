@@ -43,9 +43,9 @@ internal unsafe partial class CGui : ConfigWindow
     internal const float WidthCombo = 200f;
     private float RightWidth = 0;
     internal string TabRequest = null;
-    TitleBarButton SplatoonButton;
-    TitleBarButton ResetButton;
-    TitleBarButton PhaseButton;
+    private TitleBarButton SplatoonButton;
+    private TitleBarButton ResetButton;
+    private TitleBarButton PhaseButton;
 
     public CGui() : base("Splatoon")
     {
@@ -59,13 +59,17 @@ internal unsafe partial class CGui : ConfigWindow
             Icon = Splatoon.P.Draw ? FontAwesomeIcon.Eye : FontAwesomeIcon.EyeSlash,
             Click = x =>
             {
-                if(x == ImGuiMouseButton.Left) Splatoon.P.Draw = !P.Draw;
+                if(x == ImGuiMouseButton.Left)
+                {
+                    Splatoon.P.Draw = !P.Draw;
+                }
+
                 SplatoonButton.Icon = Splatoon.P.Draw ? FontAwesomeIcon.Eye : FontAwesomeIcon.EyeSlash;
             },
             IconOffset = new(1, 1),
             ShowTooltip = () => ImGuiEx.Tooltip("Hide rendered elements. Processing won't be stopped. Some elements may remain on screen. ")
         };
-        this.TitleBarButtons.Add(SplatoonButton);
+        TitleBarButtons.Add(SplatoonButton);
 
         ResetButton = new()
         {
@@ -77,7 +81,7 @@ internal unsafe partial class CGui : ConfigWindow
             IconOffset = new(1, 1),
             ShowTooltip = () => ImGuiEx.Tooltip("Reset Splatoon state.")
         };
-        this.TitleBarButtons.Add(ResetButton);
+        TitleBarButtons.Add(ResetButton);
 
         PhaseButton = new()
         {
@@ -89,7 +93,7 @@ internal unsafe partial class CGui : ConfigWindow
             IconOffset = new(2, 1),
             ShowTooltip = () => ImGuiEx.Tooltip("Click to switch between phase 1 and 2.")
         };
-        this.TitleBarButtons.Add(PhaseButton);
+        TitleBarButtons.Add(PhaseButton);
     }
 
     public void Dispose()
@@ -126,7 +130,10 @@ internal unsafe partial class CGui : ConfigWindow
         {
             var ctspan = TimeSpan.FromMilliseconds(Environment.TickCount64 - P.CombatStarted);
             WindowName = $"Splatoon v{P.loader.splatoonVersion} | {GenericHelpers.GetTerritoryName(Svc.ClientState.TerritoryType).Replace("| ", "")} | {(P.CombatStarted == 0 ? "Not in combat".Loc() : $"{Loc("Combat")}: {ctspan.Minutes:D2}{(ctspan.Milliseconds < 500 ? ":" : " ")}{ctspan.Seconds:D2} ({(int)ctspan.TotalSeconds}.{ctspan.Milliseconds / 100:D1}s)")} | {Loc("Phase")}: {P.Phase} | {Loc("Scene")}: {*Scene.ActiveScene} | {Loc("Layouts")}: {P.LayoutAmount} | {Loc("Elements")}: {P.ElementAmount} | {Utils.GetPlayerPositionXZY().X:F1}, {Utils.GetPlayerPositionXZY().Y:F1}###Splatoon";
-            // this.SplatoonButton.IconColor = ...; // TODO(api12): Window.TitleBarButton.IconColor is API15-only
+            // TODO(api13): Window.TitleBarButton has no IconColor at api13 either -- Cecil against
+            // TC_ok/_dalamud_api13/Dalamud.dll shows only Icon/IconOffset/ShowTooltip/Click/
+            // Priority/AvailableClickthrough. Upstream's blinking-red draw indicator stays off.
+            // this.SplatoonButton.IconColor = ...;
             this.PhaseButton.Icon = (FontAwesomeIcon)(P.Phase == 1 ? FontAwesomeIcon.AngleRight : P.Phase == 2 ? FontAwesomeIcon.AngleDoubleRight : FontAwesomeIcon.ExclamationCircle);
         }
         catch(Exception e)

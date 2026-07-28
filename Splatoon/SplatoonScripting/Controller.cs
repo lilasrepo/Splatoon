@@ -1,5 +1,6 @@
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.SubKinds;
+using ECommons.Automation.NeoTaskManager;
 using ECommons.Configuration;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
@@ -33,6 +34,18 @@ public unsafe class Controller
 
     [Obsolete("Use SplatoonScript.BasePlayer")]
     public IPlayerCharacter BasePlayer => Splatoon.BasePlayer;
+
+    /// <summary>
+    /// Provides per-script instance of NeoTaskManager that will be initialized upon first call and disposed upon script disabling.
+    /// </summary>
+    public TaskManager TaskManager
+    {
+        get
+        {
+            return field ??= new(Script.TaskManagerConfiguration);
+        }
+        internal set;
+    }
 
     /// <summary>
     /// Indicates whether player is in combat.
@@ -389,7 +402,6 @@ public unsafe class Controller
     public void Reset()
     {
         ScriptingProcessor.OnReset(Script);
-        CancelSchedulers();
     }
 
     /// <summary>
@@ -491,6 +503,91 @@ public unsafe class Controller
             }
             return default;
         }
+    }
+
+    /// <summary>
+    /// Displays a centered line in an attention window. <br />
+    /// Important: your action will not be called in the same frame as you call this method. You must prepare data beforehand and pass it into window after.<br />
+    /// Important: your action can be called multiple times. Do not put mutating calls here.<br />
+    /// To keep window open, you must keep calling this function continuously. 
+    /// </summary>
+    public void DisplayAttentionWindowLine(Action action)
+    {
+        if(P.Config.DisabledAttentionWindowScripts.Contains(Script.InternalData.FullName)) return;
+        S.AttentionOverlayWindow.Title = this.Script.InternalData.Name.Replace("_", " ") ?? "";
+        S.AttentionOverlayWindow.ActionQueueCommand.Add((action, true));
+    }
+
+    /// <summary>
+    /// Displays a centered text in an attention window. <br />
+    /// To keep window open, you must keep calling this function continuously. 
+    /// </summary>
+    public void DisplayAttentionWindowLine(string text)
+    {
+        DisplayAttentionWindowLine(() => ImGuiEx.Text(text));
+    }
+
+
+    /// <summary>
+    /// Displays a centered text in an attention window. <br />
+    /// To keep window open, you must keep calling this function continuously. 
+    /// Arguments can be displayed via $1, $2, $3, etc. starting from 1;
+    /// </summary>
+    public void DisplayAttentionWindowLine(string text, params string[] arguments)
+    {
+        for(var i = 0; i < arguments.Length; i++)
+        {
+            var a = arguments[i];
+            text = text.Replace($"${i + 1}", a);
+        }
+        DisplayAttentionWindowLine(() => ImGuiEx.Text(text));
+    }
+
+    /// <summary>
+    /// Displays a centered text in an attention window. <br />
+    /// To keep window open, you must keep calling this function continuously. 
+    /// Arguments can be displayed via $1, $2, $3, etc. starting from 1;
+    /// </summary>
+    public void DisplayAttentionWindowLine(Vector4? color, string text, params string[] arguments)
+    {
+        for(var i = 0; i < arguments.Length; i++)
+        {
+            var a = arguments[i];
+            text = text.Replace($"${i + 1}", a);
+        }
+        DisplayAttentionWindowLine(() => ImGuiEx.Text(color, text));
+    }
+
+    /// <summary>
+    /// Prefer <see cref="DisplayAttentionWindowLine(Action)"/> where possible. <br />
+    /// Draws a raw action inside attention window. <br />
+    /// Important: your action will not be called in the same frame as you call this method. You must prepare data beforehand and pass it into window after.<br />
+    /// Important: your action can be called multiple times. Do not put mutating calls here.<br />
+    /// To keep window open, you must keep calling this function continuously. 
+    /// </summary>
+    public void DisplayAttentionWindowRaw(Action action)
+    {
+        if(P.Config.DisabledAttentionWindowScripts.Contains(Script.InternalData.FullName)) return;
+        S.AttentionOverlayWindow.Title = this.Script.InternalData.Name.Replace("_", " ") ?? "";
+        S.AttentionOverlayWindow.ActionQueueCommand.Add((action, false));
+    }
+
+    /// <summary>
+    /// <b>This will send message to server.</b> Queues command for execution. This allows you to send multiple commands in a succession like a macro. Multiline text will be split and enqueued as individual messages. Each line must start with forward slash /. During replay messages are not being sent.
+    /// </summary>
+    /// <param name="text"></param>
+    /// <param name="test">If true, command won't be sent. You do not need to handle replays manually.</param>
+    public void DangerousEnqueueCommand(string text, bool test)
+    {
+        S.MessageService.EnqueueText(this.Script.InternalData.FullName, test, text);
+    }
+
+    /// <summary>
+    /// Clears queued messages. This is also called every time script is reset
+    /// </summary>
+    public void CancelQueuedCommands()
+    {
+        S.MessageService.StopAll(this.Script.InternalData.FullName);
     }
 
     /// <summary>

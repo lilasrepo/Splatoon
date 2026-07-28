@@ -6,8 +6,9 @@
     <Platforms>x64</Platforms>
     <LangVersion>preview</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <NoWarn>CS1591;CS8618;IDE0051;IDE0052</NoWarn>
+    <NoWarn>CS1591;CS8618;IDE0051;IDE0052;IDE0130</NoWarn>
     <Nullable>enable</Nullable>
+    <WarningsAsErrors>RS0030</WarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -15,11 +16,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Duties\Dawntrail\The Futures Rewritten\FullToolerPartyOnlyScrtipts\P2 Diamond Dust Full Toolers.cs" />
+    <None Remove="BannedSymbols.txt" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Duties\Dawntrail\The Futures Rewritten\FullToolerPartyOnlyScrtipts\P2 Diamond Dust Full Toolers.cs" />
+    <AdditionalFiles Include="BannedSymbols.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.12.0-beta1.25218.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -44,6 +52,14 @@
       </Reference>
       <Reference Include="Dalamud.Bindings.ImGui">
           <HintPath>$(DalamudLibPath)Dalamud.Bindings.ImGui.dll</HintPath>
+          <Private>False</Private>
+      </Reference>
+      <Reference Include="Dalamud.Bindings.ImPlot">
+          <HintPath>$(DalamudLibPath)Dalamud.Bindings.ImPlot.dll</HintPath>
+          <Private>False</Private>
+      </Reference>
+      <Reference Include="Dalamud.Bindings.ImGuizmo">
+          <HintPath>$(DalamudLibPath)Dalamud.Bindings.ImGuizmo.dll</HintPath>
           <Private>False</Private>
       </Reference>
     <Reference Include="Lumina">
