@@ -3,7 +3,7 @@ using ECommons.Throttlers;
 using Splatoon.SplatoonScripting;
 using System.Collections.Generic;
 using System.Linq;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.Configuration;

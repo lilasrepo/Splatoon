@@ -105,13 +105,15 @@ internal class Compiler
     private static string PatchScriptForApi12(string src)
     {
         // Namespace renames (using directives)
-        src = Regex.Replace(src, @"\busing\s+Dalamud\.Bindings\.ImGui\s*;", "using ImGuiNET;");
-        src = Regex.Replace(src, @"\busing\s+static\s+Dalamud\.Bindings\.ImGui\.ImGui\s*;", "using static ImGuiNET.ImGui;");
+        // porting-note(api13): the Bindings.ImGui -> ImGuiNET rewrites that used to sit here
+        // are REMOVED. At API13 the TC runtime ships Dalamud.Bindings.ImGui natively, so
+        // community scripts already name it correctly; rewriting it back to ImGuiNET makes
+        // every ImGui-using script fail to compile AT RUNTIME. Invisible to dotnet build,
+        // which is why it outlived the api13 sweep.
         src = Regex.Replace(src, @"\busing\s+ECommons\.GameHelpers\.LegacyPlayer\s*;", "using ECommons.GameHelpers;");
         src = Regex.Replace(src, @"\busing\s+ECommons\.CSExtensions\s*;", "");
 
         // Fully-qualified type references
-        src = src.Replace("Dalamud.Bindings.ImGui.", "ImGuiNET.");
         src = src.Replace("ECommons.GameHelpers.LegacyPlayer.Player", "ECommons.GameHelpers.Player");
 
         // IPlayerCharacter / IBattleNpc / IGameObject .ObjectId -> .EntityId, BUT preserve FFXIVClientStructs

@@ -4,7 +4,7 @@ using ECommons.Hooks.ActionEffectTypes;
 using ECommons.ImGuiMethods;
 using Splatoon.Memory;
 using Splatoon.SplatoonScripting;
-using static ImGuiNET.ImGui;
+using static Dalamud.Bindings.ImGui.ImGui;
 
 using ECommons.DalamudServices.Legacy;
 

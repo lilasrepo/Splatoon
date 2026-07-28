@@ -11,7 +11,7 @@ using ECommons.PartyFunctions;
 using Player = ECommons.GameHelpers.LegacyPlayer.Player;
 // using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
 using FFXIVClientStructs.FFXIV.Client.UI.Info;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using Splatoon.SplatoonScripting;
 using Splatoon.SplatoonScripting.Priority;
 using static Splatoon.Splatoon;

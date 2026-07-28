@@ -830,7 +830,7 @@ internal unsafe partial class CGui
                         {
                             if(ThreadLoadImageHandler.TryGetIconTextureWrap(s.Item2.Value.Icon, false, out var tex))
                             {
-                                ImGui.Image(tex.ImGuiHandle, new Vector2(ImGui.GetTextLineHeight()));
+                                ImGui.Image(tex.Handle, new Vector2(ImGui.GetTextLineHeight()));
                                 ImGui.SameLine();
                             }
                             if(ImGui.Selectable($"{s.Item1.StatusId} {s.Item2.Value.Name}", selected: el.refActorBuffId.Contains(s.Item1.StatusId), flags: ImGuiSelectableFlags.DontClosePopups))

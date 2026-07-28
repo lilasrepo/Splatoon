@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Authors>NightmareXIV</Authors>
-		<Version>3.9.2.10</Version>
+		<Version>3.9.2.11</Version>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -51,7 +51,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<DalamudLibPath>$(MSBuildThisFileDirectory)..\..\..\TC_ok\_dalamud_api12\</DalamudLibPath>
+		<DalamudLibPath>$(MSBuildThisFileDirectory)..\..\..\TC_ok\_dalamud_api13\</DalamudLibPath>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -68,7 +68,7 @@
     
 	<ItemGroup>
 	  <PackageReference Include="CsvHelper" Version="33.1.0" />
-	  <PackageReference Include="DalamudPackager" Version="2.1.13" />
+	  <PackageReference Include="DalamudPackager" Version="13.1.0" />
 	  <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4">
 	    <PrivateAssets>all</PrivateAssets>
 	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -120,7 +120,7 @@
 		</Reference>
 
       <Reference Include="Dalamud.Bindings.ImGui">
-          <HintPath>$(DalamudLibPath)ImGui.NET.dll</HintPath>
+          <HintPath>$(DalamudLibPath)Dalamud.Bindings.ImGui.dll</HintPath>
           <Private>False</Private>
       </Reference>
       <Reference Include="TerraFX.Interop.Windows">

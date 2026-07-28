@@ -21,8 +21,9 @@ public class InfoBar : IDisposable
     private InfoBar()
     {
         Entry = Svc.DtrBar.Get(EntryName, "");
-        // porting-note: API12 IDtrBarEntry.OnClick is parameterless Action, not Action<DtrInteractionEvent>.
-        Entry.OnClick = () => P.PriorityPopupWindow.Open(true);
+        // api13 restores upstream's Action<DtrInteractionEvent>; the parameterless
+        // Action form was an API12-only shape.
+        Entry.OnClick = _ => P.PriorityPopupWindow.Open(true);
         Entry.Tooltip = "Edit Splatoon priority";
         ProperOnLogin.RegisterAvailable(() => Update(true), true);
     }

@@ -168,7 +168,7 @@ internal unsafe partial class CGui : ConfigWindow
                             {
                                 if(x.ClassJob.ValueNullable is { } cj && ThreadLoadImageHandler.TryGetIconTextureWrap(cj.GetJob().GetIcon(), false, out var tex))
                                 {
-                                    ImGui.Image(tex.ImGuiHandle, new(ImGui.GetTextLineHeight()));
+                                    ImGui.Image(tex.Handle, new(ImGui.GetTextLineHeight()));
                                     ImGui.SameLine();
                                 }
                                 if(ImGui.Selectable($"{x.GetNameWithWorld()}", x.GetNameWithWorld() == BasePlayerOverride))

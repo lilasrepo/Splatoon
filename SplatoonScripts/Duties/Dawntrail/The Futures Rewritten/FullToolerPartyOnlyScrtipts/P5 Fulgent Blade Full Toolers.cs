@@ -11,7 +11,7 @@ using ECommons.Logging;
 using Player = ECommons.GameHelpers.LegacyPlayer.Player;
 // using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
 using ECommons.MathHelpers;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using Splatoon;
 using Splatoon.SplatoonScripting;
 using System;

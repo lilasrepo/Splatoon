@@ -15,7 +15,7 @@ using Splatoon.Memory;
 using Splatoon.SplatoonScripting;
 using Splatoon.SplatoonScripting.Priority;
 using static Splatoon.Splatoon;
-using static ImGuiNET.ImGui;
+using static Dalamud.Bindings.ImGui.ImGui;
 
 using ECommons.DalamudServices.Legacy;
 
