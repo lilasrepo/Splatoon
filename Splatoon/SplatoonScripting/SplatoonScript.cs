@@ -934,7 +934,8 @@ public abstract class SplatoonScript
         ScriptingProcessor.OnReset(this);
         try
         {
-            Controller.TaskManager?.Dispose();
+            Controller.TaskManagerInternal?.Dispose();
+            Controller.TaskManagerInternal = null!;
         }
         catch(Exception ex)
         {

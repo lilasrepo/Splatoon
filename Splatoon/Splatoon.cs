@@ -741,7 +741,6 @@ public unsafe class Splatoon : IDalamudPlugin
     }
 
     internal static Dictionary<string, Dictionary<string, List<Vector3>>> CapturedPositions = [];
-    internal static Dictionary<string, Dictionary<string, List<IGameObject>>> CapturedObjectPositions = [];
 
     internal static void ProcessElementsOfLayout(Layout l)
     {

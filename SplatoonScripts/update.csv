@@ -16,7 +16,7 @@ SplatoonScriptsOfficial.Generic@MemoryWatcher,1,https://github.com/PunishXIV/Spl
 SplatoonScriptsOfficial.Generic@DalamudFixer,1,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Generic/DalamudFixer.cs
 SplatoonScriptsOfficial.Generic@QuestHighlighter,2,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Generic/QuestHighlighter.cs
 SplatoonScriptsOfficial.Generic@ReplayNetworkMonitor,1,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Generic/ReplayNetworkMonitor.cs
-SplatoonScriptsOfficial.Generic@VisibilityTerritoryWhitelistAlter,1,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Generic/VisibilityTerritoryWhitelistAlter.cs
+SplatoonScriptsOfficial.Generic@VisibilityTerritoryWhitelistAlter,2,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Generic/VisibilityTerritoryWhitelistAlter.cs
 SplatoonScriptsOfficial.Generic@InventoryLowNotifier,2,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Generic/InventoryLowNotifier.cs
 SplatoonScriptsOfficial.Generic@AutoTeleport,1,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Generic/AutoTeleport.cs
 SplatoonScriptsOfficial.Generic@AutoHeal,1,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Generic/AutoHeal.cs
@@ -37,7 +37,8 @@ SplatoonScriptsOfficial.Generic@RSVInject,1,https://github.com/PunishXIV/Splatoo
 SplatoonScriptsOfficial.Generic@ShowEmote,5,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Generic/ShowEmote.cs
 SplatoonScriptsOfficial.Generic@ObjectExplorer,1,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Generic/ObjectExplorer.cs
 SplatoonScriptsOfficial.Generic@CloseFfxivMutantHandles,1,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Generic/CloseFfxivMutantHandles.cs
-SplatoonScriptsOfficial.Generic@ARealmRecordedWhitelistMod,4,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Generic/ARealmRecordedWhitelistMod.cs
+SplatoonScriptsOfficial.Generic@ARealmRecordedWhitelistMod,7,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Generic/ARealmRecordedWhitelistMod.cs
+SplatoonScriptsOfficial.Generic@RenderToggleCmd,1,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Generic/RenderToggleCmd.cs
 SplatoonScriptsOfficial.Generic@VnavmeshAlignCameraUnsetter,1,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Generic/VnavmeshAlignCameraUnsetter.cs
 SplatoonScriptsOfficial.Generic@KillConnection,1,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Generic/KillConnection.cs
 SplatoonScriptsOfficial.Generic@Chat2Toast,1,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Generic/Chat2Toast.cs
@@ -60,7 +61,7 @@ SplatoonScriptsOfficial.Generic@ArtisanCraftCommand,2,https://github.com/PunishX
 SplatoonScriptsOfficial.Generic@AutoUseItem,1,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Generic/AutoUseItem.cs
 SplatoonScriptsOfficial.Generic@LittleLadiesDay2026AutoFarm,9,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Generic/LittleLadiesDay2026AutoFarm.cs
 SplatoonScriptsOfficial.Generic@CommandOnLogin,1,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Generic/CommandOnLogin.cs
-SplatoonScriptsOfficial.Generic@QuestionableQuestQueue,7,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Generic/QuestionableQuestQueue.cs
+SplatoonScriptsOfficial.Generic@QuestionableQuestQueue,9,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Generic/QuestionableQuestQueue.cs
 SplatoonScriptsOfficial.Tests@OmegaMFResearch,1,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Tests/OmegaMFResearch.cs
 SplatoonScriptsOfficial.Tests@RedmoonTest3,1,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Tests/RedmoonTest3.cs
 SplatoonScriptsOfficial.Tests@ObjectEffectTest,1,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Tests/ObjectEffectTest.cs
@@ -127,7 +128,7 @@ SplatoonScriptsOfficial.Duties.Endwalker@P12S_Tethers,2,https://github.com/Punis
 SplatoonScriptsOfficial.Duties.Endwalker@DSR_Dooms,6,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Endwalker/DSR Dooms.cs
 SplatoonScriptsOfficial.Duties.Endwalker@P12S_Classical_Concepts,6,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Endwalker/P12S Classical Concepts.cs
 SplatoonScriptsOfficial.Duties.Endwalker.Dragonsong_s_Reprise@P3_Dive_from_Grace,5,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Endwalker/Dragonsong's Reprise/P3 Dive from Grace.cs
-SplatoonScriptsOfficial.Duties.Endwalker.Dragonsong_s_Reprise@P4_Dives,2,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Endwalker/Dragonsong's Reprise/P4 Dives.cs
+SplatoonScriptsOfficial.Duties.Endwalker.Dragonsong_s_Reprise@P4_Dives,3,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Endwalker/Dragonsong's Reprise/P4 Dives.cs
 SplatoonScriptsOfficial.Duties.Endwalker.Dragonsong_s_Reprise@P6_Wyrmsbreath_First,6,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Endwalker/Dragonsong's Reprise/P6 Wyrmsbreath First.cs
 SplatoonScriptsOfficial.Duties.Endwalker.Dragonsong_s_Reprise@P2_Sanctity_Of_The_Ward_Second,7,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Endwalker/Dragonsong's Reprise/P2 Sanctity Of The Ward Second.cs
 SplatoonScriptsOfficial.Duties.Endwalker.Dragonsong_s_Reprise@P5_Death_of_the_Heavens_Neo,6,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Endwalker/Dragonsong's Reprise/P5 Death of the Heavens Neo.cs
@@ -135,7 +136,7 @@ SplatoonScriptsOfficial.Duties.Endwalker.Dragonsong_s_Reprise@P3_Dive_from_Grace
 SplatoonScriptsOfficial.Duties.Endwalker.Dragonsong_s_Reprise@P6_AutoTargetSwitcher,5,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Endwalker/Dragonsong's Reprise/P6 AutoTargetSwitcher.cs
 SplatoonScriptsOfficial.Duties.Endwalker.Dragonsong_s_Reprise@P5_Wrath_of_the_Heavens,5,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Endwalker/Dragonsong's Reprise/P5 Wrath of the Heavens.cs
 SplatoonScriptsOfficial.Duties.Endwalker.Dragonsong_s_Reprise@P5_Caster_Limit_Break,2,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Endwalker/Dragonsong's Reprise/P5 Caster Limit Break.cs
-SplatoonScriptsOfficial.Duties.Endwalker.Dragonsong_s_Reprise@P2_Sanctity_Of_The_Ward_First,6,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Endwalker/Dragonsong's Reprise/P2 Sanctity Of The Ward First.cs
+SplatoonScriptsOfficial.Duties.Endwalker.Dragonsong_s_Reprise@P2_Sanctity_Of_The_Ward_First,9,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Endwalker/Dragonsong's Reprise/P2 Sanctity Of The Ward First.cs
 SplatoonScriptsOfficial.Duties.Endwalker.Dragonsong_s_Reprise@P6_Wroth_Flames,8,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Endwalker/Dragonsong's Reprise/P6 Wroth Flames.cs
 SplatoonScriptsOfficial.Duties.Endwalker.Dragonsong_s_Reprise@P5_Death_of_the_Heavens,8,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Endwalker/Dragonsong's Reprise/P5 Death of the Heavens.cs
 SplatoonScriptsOfficial.Duties.Endwalker.The_Omega_Protocol@Hello_World,9,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Endwalker/The Omega Protocol/Hello World.cs
@@ -298,15 +299,16 @@ SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad@P1_GravenImage_Reminder,3,h
 SplaSim.SplatoonScripts.Duties.Dawntrail.DancingMadUltimate@P2_Trine_Beta,7,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Dawntrail/Dancing Mad/P2_Trine_Beta.cs
 SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad@P1_Graven3_FinalSpread,5,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Dawntrail/Dancing Mad/P1_Graven3_FinalSpread.cs
 SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad@P3_Blackhole_Lite,11,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Dawntrail/Dancing Mad/P3_Blackhole_Lite.cs
+SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad@P5_Stray_Apocalypse_Melee,3,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Dawntrail/Dancing Mad/P5_Stray_Apocalypse_Melee.cs
 SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad@P4_Debuff_Reminder,13,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Dawntrail/Dancing Mad/P4_Debuff_Reminder.cs
 SplaSim.SplatoonScripts.Duties.Dawntrail.DancingMadUltimate@P3_Limit_Cut,13,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Dawntrail/Dancing Mad/P3_Limit_Cut.cs
 SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad@P2_Forsaken,10,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Dawntrail/Dancing Mad/P2_Forsaken.cs
 SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad@P3_Bowels_of_Agony_TLB,2,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Dawntrail/Dancing Mad/P3_Bowels_of_Agony_TLB.cs
 SplaSim.SplatoonScripts.Duties.Dawntrail.DancingMadUltimate@P1_Teletrouncing_Image3,1,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Dawntrail/Dancing Mad/P1_Teletrouncing_Image3.cs
 SplaSim.SplatoonScripts.Duties.Dawntrail.DancingMadUltimate@P3_Earthquake,41,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Dawntrail/Dancing Mad/P3_Earthquake.cs
-SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad@P2_Missing_1238_4567_KT_Strat,7,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Dawntrail/Dancing Mad/P2_Forsaken_Pattern/P2_Missing_1238_4567_KT_Strat.cs
+SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad@P2_Missing_1238_4567_KT_Strat,8,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Dawntrail/Dancing Mad/P2_Forsaken_Pattern/P2_Missing_1238_4567_KT_Strat.cs
 SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad@P2_Missing_1238_4567_KT_ResolveBySameTower,1,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Dawntrail/Dancing Mad/P2_Forsaken_Pattern/P2_Missing_1238_4567_KT_ResolveBySameTower.cs
-SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad@P2_Misisng_KT_Alt,7,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Dawntrail/Dancing Mad/P2_Forsaken_Pattern/P2_Missing_KT_Alt.cs
+SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad@P2_Misisng_KT_Alt,8,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Dawntrail/Dancing Mad/P2_Forsaken_Pattern/P2_Missing_KT_Alt.cs
 SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad@P2_Misisng_Yarn_BehindSwap,1,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Dawntrail/Dancing Mad/P2_Forsaken_Pattern/P2_Misisng_Yarn_BehindSwap.cs
 SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad@P2_Missing_1458_2367_Drippy,4,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Dawntrail/Dancing Mad/P2_Forsaken_Pattern/P2_Missing_1458_2367_Drippy.cs
 SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad@P2_Missing_1234_5678,3,https://github.com/PunishXIV/Splatoon/raw/main/SplatoonScripts/Duties/Dawntrail/Dancing Mad/P2_Forsaken_Pattern/P2_Missing_1234_5678.cs
