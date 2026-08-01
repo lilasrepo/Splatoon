@@ -48,7 +48,7 @@ internal class Contribute
         ImGuiEx.Text("To do so, all you need is Github account. After logging in, proceed to the links below and click \"Star\" button in top right corner of the page.".Loc());
         if(ImGui.Button("Open Splatoon repo".Loc()))
         {
-            var url = "https://github.com/PunishXIV/Splatoon";
+            var url = "https://github.com/lilasrepo/Splatoon";
             Svc.Chat.Print("[Splatoon] Splatoon repo: ".Loc() + url);
             Utils.ProcessStart(url);
         }

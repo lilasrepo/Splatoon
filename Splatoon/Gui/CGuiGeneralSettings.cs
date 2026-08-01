@@ -1,4 +1,4 @@
-using Dalamud.Interface.Colors;
+﻿using Dalamud.Interface.Colors;
 using Dalamud.Interface.Components;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
@@ -66,7 +66,7 @@ internal partial class CGui
                 ImGui.SetNextItemWidth(250f);
                 if(ImGui.Button("Open web API guide".Loc()))
                 {
-                    Utils.ProcessStart("https://github.com/PunishXIV/Splatoon#web-api-beta");
+                    Utils.ProcessStart("https://github.com/lilasrepo/Splatoon#web-api-beta");
                 }
 
                 if(ImGui.Checkbox("Enable logging".Loc(), ref Splatoon.P.Config.Logging))
