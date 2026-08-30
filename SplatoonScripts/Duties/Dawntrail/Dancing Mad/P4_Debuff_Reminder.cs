@@ -9,6 +9,7 @@ using ECommons.ChatMethods;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
+using ECommons.GameFunctions.VirtualTableClassifier;
 using ECommons.GameHelpers;
 using ECommons.Hooks.ActionEffectTypes;
 using ECommons.ImGuiMethods;
@@ -32,7 +33,7 @@ namespace SplatoonScriptsOfficial.Duties.Dawntrail.Dancing_Mad;
 
 public class P4_Debuff_Reminder : SplatoonScript<P4_Debuff_Reminder.Config>
 {
-    public override Metadata Metadata { get; } = new(13, "NightmareXIV, mirage");
+    public override Metadata Metadata { get; } = new(15, "NightmareXIV, mirage");
     public override HashSet<uint>? ValidTerritories { get; } = [1363];
 
     private List<string> VfxLie = ["vfx/common/eff/z3oy_stlp6_c0c.avfx", "vfx/common/eff/z3oy_stlp4_c0c.avfx"];
@@ -309,6 +310,7 @@ public class P4_Debuff_Reminder : SplatoonScript<P4_Debuff_Reminder.Config>
             e.Enabled = true;
             e.overlayText = hints.OrderByDescending(x => x.Time).ThenBy(x => x.Text).Select(x => x.Text).Print("\n");
         }
+        ResolveFinalDebuff();
     }
 
     private void DisplayMiddleDropIfNeeded(string t)
@@ -346,6 +348,9 @@ public class P4_Debuff_Reminder : SplatoonScript<P4_Debuff_Reminder.Config>
         IsTruth.Clear();
         FakeStatuses.Clear();
         OtherInfoQueue.Clear();
+        IsFakeBlowout = null;
+        IsFakeLightning = null;
+        FalseAnnounced = false;
     }
 
     public override void OnVFXSpawn(uint target, string vfxPath)
@@ -626,9 +631,98 @@ public class P4_Debuff_Reminder : SplatoonScript<P4_Debuff_Reminder.Config>
         ImGui.SameLine();
         ImGuiEx.Text("Short spread");
 
+        ImGui.SetNextItemWidth(200f);
+        C.FireIsAOE.ImGuiEditNoDefault();
+        ImGui.SameLine();
+        ImGuiEx.Text("Fire is AOE (real)");
+
+        ImGui.SetNextItemWidth(200f);
+        C.FireIsDonut.ImGuiEditNoDefault();
+        ImGui.SameLine();
+        ImGuiEx.Text("Fire is Donut (fake)");
+
+        ImGui.SetNextItemWidth(200f);
+        C.WaterIsAOE.ImGuiEditNoDefault();
+        ImGui.SameLine();
+        ImGuiEx.Text("Water is AOE (fake)");
+
+        ImGui.SetNextItemWidth(200f);
+        C.WaterIsDonut.ImGuiEditNoDefault();
+        ImGui.SameLine();
+        ImGuiEx.Text("Water is Donut (real)");
+
+        ImGui.SetNextItemWidth(200f);
+        C.Other_AccelerationBomb.ImGuiEditNoDefault();
+        ImGui.SameLine();
+        ImGuiEx.Text("Other: Acceleration bomb, normal");
+
+        ImGui.SetNextItemWidth(200f);
+        C.Other_AccelerationBombInv.ImGuiEditNoDefault();
+        ImGui.SameLine();
+        ImGuiEx.Text("Other: Acceleration bomb, inverted");
+
+        ImGui.SetNextItemWidth(200f);
+        C.Other_LongGaze.ImGuiEditNoDefault();
+        ImGui.SameLine();
+        ImGuiEx.Text("Other: Long gaze (away)");
+
+        ImGui.SetNextItemWidth(200f);
+        C.Other_LongGazeInv.ImGuiEditNoDefault();
+        ImGui.SameLine();
+        ImGuiEx.Text("Other: Long gaze (at)");
+
+        ImGui.SetNextItemWidth(200f);
+        C.Other_ShortGaze.ImGuiEditNoDefault();
+        ImGui.SameLine();
+        ImGuiEx.Text("Other: Short gaze (away)");
+
+        ImGui.SetNextItemWidth(200f);
+        C.Other_ShortGazeInv.ImGuiEditNoDefault();
+        ImGui.SameLine();
+        ImGuiEx.Text("Other: Short gaze (at)");
+
+        ImGui.SetNextItemWidth(200f);
+        C.Other_LongSpread.ImGuiEditNoDefault();
+        ImGui.SameLine();
+        ImGuiEx.Text("Other: Long spread");
+
+        ImGui.SetNextItemWidth(200f);
+        C.Other_ShortSpread.ImGuiEditNoDefault();
+        ImGui.SameLine();
+        ImGuiEx.Text("Other: Short spread");
+
+        ImGuiEx.TextWrapped(ImGuiColors.DalamudGrey, "'Other' messages are for callouts only; $ is replaced with the player name.");
+
+        ImGui.Checkbox("Print final positions (beta)", ref C.FinalResolution);
+
+        if(C.FinalResolution)
+        {
+            ImGui.SetNextItemWidth(200f);
+            C.Final_InBoth.ImGuiEditNoDefault();
+            ImGui.SameLine();
+            ImGuiEx.Text("Final positions - in both attacks");
+
+            ImGui.SetNextItemWidth(200f);
+            C.Final_InCone.ImGuiEditNoDefault();
+            ImGui.SameLine();
+            ImGuiEx.Text("Final positions - in cone only");
+
+            ImGui.SetNextItemWidth(200f);
+            C.Final_InLightning.ImGuiEditNoDefault();
+            ImGui.SameLine();
+            ImGuiEx.Text("Final positions - in lightning strike only");
+
+            ImGui.SetNextItemWidth(200f);
+            C.Final_OutBoth.ImGuiEditNoDefault();
+            ImGui.SameLine();
+            ImGuiEx.Text("Final positions - outside both attacks");
+        }
 
         if(ImGui.CollapsingHeader("Debug"))
         {
+            ImGuiEx.Checkbox("IsFakeBlowout", ref this.IsFakeBlowout);
+            ImGuiEx.Checkbox("IsFakeLightning", ref this.IsFakeLightning);
+            ImGuiEx.Checkbox("FalseAnnounced", ref this.FalseAnnounced);
             if(ImGui.Button("Export"))
             {
                 GenericHelpers.Copy(JsonConvert.SerializeObject(FakeStatuses));
@@ -688,6 +782,7 @@ public class P4_Debuff_Reminder : SplatoonScript<P4_Debuff_Reminder.Config>
         public uint MarkingParamLongSpread;
         public bool UseSelfmark = false;
         public bool OutputInChat = true;
+        public bool FinalResolution = true;
         public XivChatType OverrideChatType = XivChatType.None;
         public InternationalString AccelerationBomb = new(en: "Acceleration bomb on YOU (DON'T MOVE)", jp: "加速度　とまる");
         public InternationalString AccelerationBombInv = new(en: "Inverted acceleration bomb on YOU (MOVE)", jp: "加速度　うごく");
@@ -697,22 +792,71 @@ public class P4_Debuff_Reminder : SplatoonScript<P4_Debuff_Reminder.Config>
         public InternationalString ShortGazeInv = new(en: "SHORT GAZE on YOU (Look At)", jp: "早　視線　みる");
         public InternationalString LongSpread = new(en:"LONG SPREAD on YOU", jp: "遅　散開");
         public InternationalString ShortSpread = new(en: "SHORT SPREAD on YOU", jp: "早　散開");
-        public InternationalString FireIsAOE = new(en: "- Fire is AOE (real)");
-        public InternationalString FireIsDonut = new(en: "- Fire is Donut (fake)");
-        public InternationalString WaterIsAOE = new(en: "- Water is AOE (fake)");
-        public InternationalString WaterIsDonut = new(en: "- Water is Donut (real)");
+        public InternationalString FireIsAOE = new(en: "- Fire is AOE (real)", jp: "- 真　ほのお　AOE");
+        public InternationalString FireIsDonut = new(en: "- Fire is Donut (fake)", jp: "- 嘘　ほのお　ドーナツ");
+        public InternationalString WaterIsAOE = new(en: "- Water is AOE (fake)", jp: "- 嘘　つなみ　AOE");
+        public InternationalString WaterIsDonut = new(en: "- Water is Donut (real)", jp: "- 真　つなみ　ドーナツ");
 
 
-        public InternationalString Other_AccelerationBomb = new(en: "> Acceleration bomb on $ (DON'T MOVE)");
-        public InternationalString Other_AccelerationBombInv = new(en: "> Inverted acceleration bomb on $ (MOVE)");
-        public InternationalString Other_LongGaze = new(en: "> LONG GAZE on $ (Look Away)");
-        public InternationalString Other_LongGazeInv = new(en: "> LONG GAZE on $ (Look At)");
-        public InternationalString Other_ShortGaze = new(en: "> SHORT GAZE on $ (Look Away)");
-        public InternationalString Other_ShortGazeInv = new(en: "> SHORT GAZE on $ (Look At)");
-        public InternationalString Other_LongSpread = new(en: "> LONG SPREAD on $");
-        public InternationalString Other_ShortSpread = new(en: "> SHORT SPREAD on $");
+        public InternationalString Other_AccelerationBomb = new(en: "> Acceleration bomb on $ (DON'T MOVE)", jp: "> 加速度　とまる　対象： $");
+        public InternationalString Other_AccelerationBombInv = new(en: "> Inverted acceleration bomb on $ (MOVE)", jp: "> 加速度　うごく　対象： $");
+        public InternationalString Other_LongGaze = new(en: "> LONG GAZE on $ (Look Away)", jp: "> 遅　視線　みない　対象： $");
+        public InternationalString Other_LongGazeInv = new(en: "> LONG GAZE on $ (Look At)", jp: "> 遅　視線　みる　対象： $");
+        public InternationalString Other_ShortGaze = new(en: "> SHORT GAZE on $ (Look Away)", jp: "> 早　視線　みない　対象： $");
+        public InternationalString Other_ShortGazeInv = new(en: "> SHORT GAZE on $ (Look At)", jp: "> 早　視線　みる　対象： $");
+        public InternationalString Other_LongSpread = new(en: "> LONG SPREAD on $", jp: "> 遅　散開　対象: $");
+        public InternationalString Other_ShortSpread = new(en: "> SHORT SPREAD on $", jp: "> 早　散開　対象: $");
+
+        public InternationalString Final_InCone = new(en: "> STAND: IN CONE");
+        public InternationalString Final_InLightning = new(en: "> STAND: IN LIGHTNING");
+        public InternationalString Final_InBoth = new(en: "> STAND: IN BOTH");
+        public InternationalString Final_OutBoth = new(en: "> STAND: OUT BOTH");
 
         public bool ShowOthers = false;
+    }
+
+    bool? IsFakeBlowout;
+    bool? IsFakeLightning;
+    bool FalseAnnounced = false;
+    void ResolveFinalDebuff()
+    {
+        var obj = Svc.Objects.OfTypeIBattleNpc();
+        var isFakeBlowout = obj.Count(x => x.IsCasting(47771)) == 2 && obj.Count(x => x.IsCasting(47774)) == 2;
+        var isTrueBlowout = obj.Count(x => x.IsCasting(47768)) == 2;
+        var isTrueLightning = obj.Count(x => x.IsCasting(47775)) == 2;
+        var isFakeLightning = obj.Count(x => x.IsCasting(47777)) == 2 && obj.Count(x => x.IsCasting(47776)) == 2;
+        if(Enumerable.Count([isFakeBlowout, isFakeLightning, isTrueBlowout, isTrueLightning], x => x) == 1)
+        {
+            if(isFakeBlowout) IsFakeBlowout = true;
+            if(isFakeLightning) IsFakeLightning = true;
+            if(isTrueBlowout) IsFakeBlowout = false;
+            if(isTrueLightning) IsFakeLightning = false;
+        }
+        if(obj.Any(x => x.IsCasting(47781) && x.CurrentCastTime > 1 && !FalseAnnounced))
+        {
+            var kefka = obj.First(x => x.DataId == 18475 && x.IsTargetable);
+            if(AttachedInfo.TryGetVfx(kefka, out var vfx))
+            {
+                FalseAnnounced = true;
+                var orderedVfx = vfx.Where(x => x.Key.Contains("/lockon/")).OrderBy(x => x.Value.AgeF).Take(2);
+                var isInvertLightning = orderedVfx.Any(x => x.Key == "vfx/lockon/eff/m0462trg_c03c.avfx");
+                var isInvertBlowout = orderedVfx.Any(x => x.Key == "vfx/lockon/eff/m0462trg_c05c.avfx");
+                if(isInvertLightning) IsFakeLightning = !IsFakeLightning;
+                if(isInvertBlowout) IsFakeBlowout = !IsFakeBlowout;
+                PluginLog.Information($"Inverted lightning: {isInvertLightning}, inverted blowout: {isInvertBlowout}, final resolution: IsFakeBlowout={IsFakeBlowout}, IsFakeLightning={IsFakeLightning}");
+                var str = (IsFakeLightning, IsFakeBlowout) switch
+                {
+                    (true, true) => C.Final_InBoth,
+                    (true, false) => C.Final_InLightning,
+                    (false, true) => C.Final_InCone,
+                    (false, false) => C.Final_OutBoth,
+                };
+                if(C.OutputInChat)
+                {
+                    Print(UIColor.Pink, str.Get()); 
+                }
+            }
+        }
     }
 
     private uint[] ValidTextParams = [80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 476, 478, 480,];

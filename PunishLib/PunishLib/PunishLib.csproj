@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Authors>PunishXIV</Authors>
+        <Version>1.0.0.0</Version>
+    </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net9.0-windows</TargetFramework>
+        <Platforms>x64</Platforms>
+        <LangVersion>preview</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <OutputPath>bin\$(Configuration)\</OutputPath>
+        <NoWarn>CS1591;MSB3277;CS0649;CS8632;CS0414;CS0169;CS8625</NoWarn>
+        <Nullable>enable</Nullable>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    </PropertyGroup>
+    <PropertyGroup>
+        <DalamudLibPath>$(MSBuildThisFileDirectory)..\..\..\..\TC_ok\_dalamud_api13\</DalamudLibPath>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\ECommons\ECommons\ECommons.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <Reference Include="Newtonsoft.Json"><HintPath>$(DalamudLibPath)Newtonsoft.Json.dll</HintPath><Private>False</Private></Reference>
+        <Reference Include="Dalamud"><HintPath>$(DalamudLibPath)Dalamud.dll</HintPath><Private>False</Private></Reference>
+        <Reference Include="Dalamud.Common"><HintPath>$(DalamudLibPath)Dalamud.Common.dll</HintPath><Private>False</Private></Reference>
+        <Reference Include="Dalamud.Bindings.ImGui"><HintPath>$(DalamudLibPath)Dalamud.Bindings.ImGui.dll</HintPath><Private>False</Private></Reference>
+        <Reference Include="Lumina"><HintPath>$(DalamudLibPath)Lumina.dll</HintPath><Private>False</Private></Reference>
+        <Reference Include="Lumina.Excel"><HintPath>$(DalamudLibPath)Lumina.Excel.dll</HintPath><Private>False</Private></Reference>
+        <Reference Include="FFXIVClientStructs"><HintPath>$(DalamudLibPath)FFXIVClientStructs.dll</HintPath><Private>False</Private></Reference>
+        <Reference Include="InteropGenerator.Runtime"><HintPath>$(DalamudLibPath)InteropGenerator.Runtime.dll</HintPath><Private>False</Private></Reference>
+        <Reference Include="Serilog"><HintPath>$(DalamudLibPath)Serilog.dll</HintPath><Private>False</Private></Reference>
+    </ItemGroup>
+</Project>
