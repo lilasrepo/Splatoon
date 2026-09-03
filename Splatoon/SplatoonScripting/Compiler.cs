@@ -110,11 +110,21 @@ internal class Compiler
         // community scripts already name it correctly; rewriting it back to ImGuiNET makes
         // every ImGui-using script fail to compile AT RUNTIME. Invisible to dotnet build,
         // which is why it outlived the api13 sweep.
-        src = Regex.Replace(src, @"\busing\s+ECommons\.GameHelpers\.LegacyPlayer\s*;", "using ECommons.GameHelpers;");
-        src = Regex.Replace(src, @"\busing\s+ECommons\.CSExtensions\s*;", "");
+        // porting-note(api13, 2026-09-03): the OTHER direction is still needed. 41 of the operator's on-disk
+        // scripts pre-date upstream's Bindings.ImGui move and say `using ImGuiNET;` -- api13 has no
+        // ImGui.NET.dll, so they fail CS0246/CS0103 at runtime (measured 2026-09-03: 1070 `ImGui` misses).
+        // Same rewrite plugin_update.py applies to plugin source at api13.
+        src = Regex.Replace(src, @"\busing\s+ImGuiNET\s*;", "using Dalamud.Bindings.ImGui;");
+        src = src.Replace("ImGuiNET.", "Dalamud.Bindings.ImGui.");
+        // ECommons 3.2.1.15 keeps IPlayerCharacter.GetJob() in GameHelpers.LegacyPlayer; older scripts
+        // call it with only `using ECommons.GameHelpers;`. Add the namespace only when needed -- importing
+        // both unconditionally makes GetNameWithWorld ambiguous.
+        if(src.Contains(".GetJob()") && !Regex.IsMatch(src, @"\busing\s+ECommons\.GameHelpers\.LegacyPlayer\s*;"))
+            src = new Regex(@"\busing\s+ECommons\.GameHelpers\s*;").Replace(src, "using ECommons.GameHelpers;" + System.Environment.NewLine + "using ECommons.GameHelpers.LegacyPlayer;", 1);
 
-        // Fully-qualified type references
-        src = src.Replace("ECommons.GameHelpers.LegacyPlayer.Player", "ECommons.GameHelpers.Player");
+        // porting-note(api13, 2026-09-02): the LegacyPlayer / CSExtensions rewrites that used to sit here are
+        // REMOVED too -- the vendored ECommons is 3.2.1.15 now, which ships both namespaces, so scripts
+        // compile against the surface they were written for.
 
         // IPlayerCharacter / IBattleNpc / IGameObject .ObjectId -> .EntityId, BUT preserve FFXIVClientStructs
         // GameObjectId struct field accesses (GameObjectId has .ObjectId, not .EntityId — renaming breaks compile):

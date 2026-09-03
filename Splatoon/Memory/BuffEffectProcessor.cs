@@ -1,3 +1,4 @@
+using ECommons.GameHelpers.LegacyPlayer; // porting-note(api13): IPlayerCharacter.GetJob() lives here in ECommons 3.2.1.15
 using ECommons.GameHelpers;
 // using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
 using FFXIVClientStructs.FFXIV.Client.Game;

@@ -113,7 +113,7 @@ internal sealed unsafe class ImGuiLegacyRenderer : RenderEngine
                                 foreach(var pos in list)
                                 {
                                     var angle = ((element.FaceInvert ? 0 : 180) - MathHelper.GetRelativeAngle(Svc.Targets.Target.Position.ToVector2(), pos.ToVector2())).DegreesToRadians();
-                                    AddRotatedLine(layout, element.FaceInvert ? MathHelperHeadCompat.SwapYZ(pos) : Svc.Targets.Target.GetPositionXZY(), angle, element, radius, Svc.Targets.Target.HitboxRadius);
+                                    AddRotatedLine(layout, element.FaceInvert ? MathHelper.SwapYZ(pos) : Svc.Targets.Target.GetPositionXZY(), angle, element, radius, Svc.Targets.Target.HitboxRadius);
                                 }
                             }
                         }
@@ -140,7 +140,7 @@ internal sealed unsafe class ImGuiLegacyRenderer : RenderEngine
                                             var angle = ((element.FaceInvert ? 0 : 180) - (MathHelper.GetRelativeAngle(Svc.Targets.Target.Position.ToVector2(), pos.ToVector2()) - x.Float())).DegreesToRadians();
                                             var baseAngle = ((element.FaceInvert ? 0 : 180) - MathHelper.GetRelativeAngle(Svc.Targets.Target.Position.ToVector2(), pos.ToVector2())).DegreesToRadians();
                                             AddConeLine(
-                                                element.FaceInvert ? MathHelperHeadCompat.SwapYZ(pos) : Svc.Targets.Target.GetPositionXZY(),
+                                                element.FaceInvert ? MathHelper.SwapYZ(pos) : Svc.Targets.Target.GetPositionXZY(),
                                                 baseAngle,
                                                 angle,
                                                 element,
@@ -177,7 +177,7 @@ internal sealed unsafe class ImGuiLegacyRenderer : RenderEngine
                                         {
                                             var angle = ((element.FaceInvert ? 0 : 180) - (MathHelper.GetRelativeAngle(Svc.Targets.Target.Position.ToVector2(), pos.ToVector2()) - element.coneAngleMax.Float())).DegreesToRadians();
                                             var baseAngle = ((element.FaceInvert ? 0 : 180) - MathHelper.GetRelativeAngle(Svc.Targets.Target.Position.ToVector2(), pos.ToVector2())).DegreesToRadians();
-                                            AddConeLine(element.FaceInvert ? MathHelperHeadCompat.SwapYZ(pos) : Svc.Targets.Target.GetPositionXZY(), baseAngle, angle, element, radius, 1f, true, layout);
+                                            AddConeLine(element.FaceInvert ? MathHelper.SwapYZ(pos) : Svc.Targets.Target.GetPositionXZY(), baseAngle, angle, element, radius, 1f, true, layout);
                                         }
                                     }
                                 }
@@ -234,7 +234,7 @@ internal sealed unsafe class ImGuiLegacyRenderer : RenderEngine
                                     foreach(var pos in list)
                                     {
                                         var angle = ((element.FaceInvert ? 0 : 180) - MathHelper.GetRelativeAngle(obj.Position.ToVector2(), pos.ToVector2())).DegreesToRadians();
-                                        AddRotatedLine(layout, element.FaceInvert ? MathHelperHeadCompat.SwapYZ(pos) : obj.GetPositionXZY(), angle, element, aradius, obj.HitboxRadius);
+                                        AddRotatedLine(layout, element.FaceInvert ? MathHelper.SwapYZ(pos) : obj.GetPositionXZY(), angle, element, aradius, obj.HitboxRadius);
                                     }
                                 }
                             }
@@ -261,7 +261,7 @@ internal sealed unsafe class ImGuiLegacyRenderer : RenderEngine
                                                 var angle = ((element.FaceInvert ? 0 : 180) - (MathHelper.GetRelativeAngle(obj.Position.ToVector2(), pos.ToVector2()) - x.Float())).DegreesToRadians();
                                                 var baseAngle = ((element.FaceInvert ? 0 : 180) - MathHelper.GetRelativeAngle(obj.Position.ToVector2(), pos.ToVector2())).DegreesToRadians();
                                                 AddConeLine(
-                                                    element.FaceInvert ? MathHelperHeadCompat.SwapYZ(pos) : obj.GetPositionXZY(),
+                                                    element.FaceInvert ? MathHelper.SwapYZ(pos) : obj.GetPositionXZY(),
                                                     baseAngle,
                                                     angle,
                                                     element,
@@ -298,7 +298,7 @@ internal sealed unsafe class ImGuiLegacyRenderer : RenderEngine
                                             {
                                                 var angle = ((element.FaceInvert ? 0 : 180) - (MathHelper.GetRelativeAngle(obj.Position.ToVector2(), pos.ToVector2()) - element.coneAngleMax.Float())).DegreesToRadians();
                                                 var baseAngle = ((element.FaceInvert ? 0 : 180) - MathHelper.GetRelativeAngle(obj.Position.ToVector2(), pos.ToVector2())).DegreesToRadians();
-                                                AddConeLine(element.FaceInvert ? MathHelperHeadCompat.SwapYZ(pos) : obj.GetPositionXZY(), baseAngle, angle, element, aradius, 1f, true, layout);
+                                                AddConeLine(element.FaceInvert ? MathHelper.SwapYZ(pos) : obj.GetPositionXZY(), baseAngle, angle, element, aradius, 1f, true, layout);
                                             }
                                         }
                                     }
@@ -387,7 +387,7 @@ internal sealed unsafe class ImGuiLegacyRenderer : RenderEngine
                                     var baseAngle = ((element.FaceInvert ? 180 : 0) + MathHelper.GetRelativeAngle(new Vector2(coords.refX + element.offX, coords.refY + element.offY), fpos.ToVector2())).DegreesToRadians() + MathF.PI;
                                     var startRad = baseAngle + element.coneAngleMin.Float().DegreesToRadians() + (MathF.PI / 2);
                                     var endRad = baseAngle + element.coneAngleMax.Float().DegreesToRadians() + (MathF.PI / 2);
-                                    AddCone(layout, element.FaceInvert ? MathHelperHeadCompat.SwapYZ(pos) : pos, startRad, endRad, element, element.radius);
+                                    AddCone(layout, element.FaceInvert ? MathHelper.SwapYZ(pos) : pos, startRad, endRad, element, element.radius);
                                 }
                             }
                         }
@@ -422,7 +422,7 @@ internal sealed unsafe class ImGuiLegacyRenderer : RenderEngine
                                         )).DegreesToRadians();
 
                                         AddConeLine(
-                                            element.FaceInvert ? MathHelperHeadCompat.SwapYZ(fpos) : pos,
+                                            element.FaceInvert ? MathHelper.SwapYZ(fpos) : pos,
                                             baseAngle,
                                             angle,
                                             element,

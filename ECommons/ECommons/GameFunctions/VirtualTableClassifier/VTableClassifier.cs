@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Game.ClientState.Objects.Types;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using System.Collections;
@@ -63,7 +63,11 @@ public static class VTableClassifier
         fixed(HousingObject* ptr = &obj) return Classify(ptr);
     }
 
-    // porting-note: HousingEventObject Classify overload dropped — type not resolvable in API12 FCS reference dll (game 7.1); unused by Splatoon.
+    public static unsafe VObjectKind Classify(this ref HousingEventObject obj)
+    {
+        fixed(HousingEventObject* ptr = &obj) return Classify(ptr);
+    }
+
     public static unsafe VObjectKind Classify(this ref HousingCombinedObject obj)
     {
         fixed(HousingCombinedObject* ptr = &obj) return Classify(ptr);
@@ -85,13 +89,9 @@ public static class VTableClassifier
         return Classify((void*)obj.Address);
     }
 
-    // porting-note(api12): IsBattleChara/IsBattleNpc use Dalamud's own IGameObject wrapper type
-    // (`obj is IBattleChara`) instead of the FCS vtable Classify(). On game 7.1 the vtable result
-    // disagrees with Dalamud's wrapper type for some objects, so the original hard cast
-    // `(IBattleChara)obj` threw InvalidCastException every frame in AttachedInfo.Tick. This matches
-    // TC_ok Splatoon's proven `x is IBattleChara` pattern and never throws.
     public static bool IsBattleChara(this IGameObject? obj)
     {
+        // porting-note(TC): Dalamud wrapper test, not the vtable classify -- the classify path hard-casts and throws InvalidCastException every frame on the TC client.
         return obj is IBattleChara;
     }
 

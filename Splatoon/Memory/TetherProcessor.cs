@@ -1,3 +1,4 @@
+using ECommons.GameHelpers.LegacyPlayer; // porting-note(api13): IPlayerCharacter.GetJob() lives here in ECommons 3.2.1.15
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Hooking;
 using Dalamud.Utility.Signatures;
