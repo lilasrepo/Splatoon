@@ -39,7 +39,7 @@ public unsafe partial struct AtkComponentDragDrop : ICreatable {
     public partial void SetQuantity(int quantity);
 
     [MemberFunction("E8 ?? ?? ?? ?? F2 41 0F 10 87")]
-    public partial void AttachTooltip(AtkTooltipType type, ushort parentId, AtkResNode* targetNode, AtkTooltipArgs* tooltipArgs);
+    public partial void AttachTooltip(AtkTooltipManager.AtkTooltipType type, ushort parentId, AtkResNode* targetNode, AtkTooltipArgs* tooltipArgs);
 
     [MemberFunction("E8 ?? ?? ?? ?? 48 8B 7E ?? 48 85 FF 75")]
     public partial void DetachTooltip();

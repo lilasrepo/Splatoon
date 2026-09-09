@@ -17,7 +17,7 @@ public unsafe partial struct AtkTooltipManager {
     [FieldOffset(0x14C)] public byte Flag1; // Allows AddonItemDetail to be shown with Flag1 |= 2.
 
     [MemberFunction("E8 ?? ?? ?? ?? 44 85 F6")]
-    public partial void AttachTooltip(AtkTooltipType type, ushort parentId, AtkResNode* targetNode, AtkTooltipArgs* tooltipArgs);
+    public partial void AttachTooltip(AtkTooltipManager.AtkTooltipType type, ushort parentId, AtkResNode* targetNode, AtkTooltipArgs* tooltipArgs);
 
     [MemberFunction("E8 ?? ?? ?? ?? 8B 75 DF")]
     public partial void DetachTooltip(AtkResNode* targetNode);
@@ -27,7 +27,7 @@ public unsafe partial struct AtkTooltipManager {
 
     [MemberFunction("E8 ?? ?? ?? ?? 49 63 47 ?? BB")]
     public partial void ShowTooltip(
-        AtkTooltipType type,
+        AtkTooltipManager.AtkTooltipType type,
         ushort parentId,
         AtkResNode* targetNode,
         AtkTooltipArgs* tooltipArgs,
@@ -41,7 +41,7 @@ public unsafe partial struct AtkTooltipManager {
         var args = stackalloc AtkTooltipArgs[1];
         args->Ctor();
         args->TextArgs.Text = tooltipString;
-        ShowTooltip(AtkTooltipType.Text, parentId, targetNode, args);
+        ShowTooltip(AtkTooltipManager.AtkTooltipType.Text, parentId, targetNode, args);
     }
 
     [MemberFunction("66 3B 91 ?? ?? ?? ?? 75 09")]
@@ -55,15 +55,15 @@ public unsafe partial struct AtkTooltipManager {
     [GenerateInterop]
     [StructLayout(LayoutKind.Explicit, Size = 0x18)]
     public partial struct AtkTooltipArgs : ICreatable {
-        /// <remarks> Args for <see cref="AtkTooltipType.Text"/> / AddonTooltip. </remarks>
+        /// <remarks> Args for <see cref="AtkTooltipManager.AtkTooltipType.Text"/> / AddonTooltip. </remarks>
         [FieldOffset(0), CExporterUnion("Args")] public AtkTooltipTextArgs TextArgs;
-        /// <remarks> Args for <see cref="AtkTooltipType.Item"/> / AddonItemDetail. </remarks>
+        /// <remarks> Args for <see cref="AtkTooltipManager.AtkTooltipType.Item"/> / AddonItemDetail. </remarks>
         [FieldOffset(0), CExporterUnion("Args")] public AtkTooltipItemArgs ItemArgs;
-        /// <remarks> Args for <see cref="AtkTooltipType.Action"/> / AddonActionDetail. </remarks>
+        /// <remarks> Args for <see cref="AtkTooltipManager.AtkTooltipType.Action"/> / AddonActionDetail. </remarks>
         [FieldOffset(0), CExporterUnion("Args")] public AtkTooltipActionArgs ActionArgs;
-        /// <remarks> Args for <see cref="AtkTooltipType.LovmAction"/> / AddonLovmActionDetail. </remarks>
+        /// <remarks> Args for <see cref="AtkTooltipManager.AtkTooltipType.LovmAction"/> / AddonLovmActionDetail. </remarks>
         [FieldOffset(0), CExporterUnion("Args")] public AtkTooltipLovmActionArgs LovmActionArgs;
-        /// <remarks> Args for <see cref="AtkTooltipType.MiragePrismPrismItem"/> / AddonMiragePrismPrismItemDetail. </remarks>
+        /// <remarks> Args for <see cref="AtkTooltipManager.AtkTooltipType.MiragePrismPrismItem"/> / AddonMiragePrismPrismItemDetail. </remarks>
         [FieldOffset(0), CExporterUnion("Args")] public AtkTooltipMiragePrismPrismItemArgs MiragePrismPrismItemArgs;
 
         [MemberFunction("E8 ?? ?? ?? ?? C1 FB 04")]
@@ -169,7 +169,7 @@ public unsafe partial struct AtkTooltipManager {
     public struct AtkTooltipInfo {
         [FieldOffset(0x0)] public AtkTooltipArgs AtkTooltipArgs;
         [FieldOffset(0x18)] public ushort ParentId; // same as IDs in addons
-        [FieldOffset(0x1A)] public AtkTooltipType Type;
+        [FieldOffset(0x1A)] public AtkTooltipManager.AtkTooltipType Type;
     }
 
     [Flags]

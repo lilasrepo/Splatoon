@@ -111,7 +111,7 @@ internal class Compiler
         // every ImGui-using script fail to compile AT RUNTIME. Invisible to dotnet build,
         // which is why it outlived the api13 sweep.
         // porting-note(api13, 2026-09-03): the OTHER direction is still needed. 41 of the operator's on-disk
-        // scripts pre-date upstream's Bindings.ImGui move and say `using ImGuiNET;` -- api13 has no
+        // scripts pre-date upstream's Bindings.ImGui move and say `using Dalamud.Bindings.ImGui;` -- api13 has no
         // ImGui.NET.dll, so they fail CS0246/CS0103 at runtime (measured 2026-09-03: 1070 `ImGui` misses).
         // Same rewrite plugin_update.py applies to plugin source at api13.
         src = Regex.Replace(src, @"\busing\s+ImGuiNET\s*;", "using Dalamud.Bindings.ImGui;");
