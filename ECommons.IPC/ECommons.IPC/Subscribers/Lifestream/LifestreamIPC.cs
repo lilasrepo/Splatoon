@@ -26,7 +26,18 @@ public sealed class LifestreamIPC : IPCBase
         public delegate void MoveToWorkshop();
         public delegate void TPAndChangeWorld(string world, bool isDcTransfer, string secondaryTeleport, bool noSecondaryTeleport, WorldChangeAetheryte? worldChangeGateway, bool? doNotifyAfterTravel, bool? returnToGatewayAfterTravel);
         public delegate void MoveEx(List<Vector3> path, bool? ignoreDeltaY, float? destTolerance, float? tolerance);
+        public delegate void EnqueueCustomAliasFromString(string aliasString, bool force, int? inclusiveStart, int? inclusiveEnd);
     }
+
+    [EzIPC("EnqueueCustomAliasFromString")]
+    private EnqueueCustomAliasFromString EnqueueCustomAliasFromStringInternal { get; set; }
+    public void EnqueueCustomAliasFromString(string aliasString, bool force = false, int? inclusiveStart = null, int? inclusiveEnd = null)
+    {
+        EnqueueCustomAliasFromStringInternal(aliasString, force, inclusiveStart, inclusiveEnd);
+    }
+
+    [EzIPC]
+    public Action<AddressBookEntryTuple> GoToHousingAddress { get; private set; }
 
     [EzIPC]
     public Func<bool> CanChangeInstance { get; private set; }
@@ -156,10 +167,15 @@ public sealed class LifestreamIPC : IPCBase
         return false;
     }
 
-    // TODO(api12): Lifestream ErrorCode enum not provided in walk-back ECommons; AutoDuty doesn't use these IPC endpoints anyway.
-    // [EzIPC]
-    // public Func<string, string, ErrorCode> ChangeCharacter { get; private set; }
-    //
-    // [EzIPC]
-    // public Func<ErrorCode> Logout { get; private set; }
+    [EzIPC("ChangeCharacter")]
+    public Func<string, string, ErrorCode> ChangeCharacter { get; private set; }
+
+    [EzIPC("ChangeCharacterAndTravel")]
+    public Func<string, string, string, ErrorCode> ChangeCharacterAndTravel { get; private set; }
+
+    [EzIPC("Logout")] 
+    public Func<ErrorCode> Logout { get; private set; }
+
+    [EzIPC("Abort")]
+    public Action Abort { get; private set; }
 }

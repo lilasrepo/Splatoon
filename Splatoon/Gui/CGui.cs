@@ -6,8 +6,7 @@ using ECommons;
 using ECommons.ExcelServices;
 using ECommons.Funding;
 using ECommons.GameFunctions;
-using ECommons.GameHelpers;
-// using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
+using ECommons.GameHelpers.LegacyPlayer;
 using ECommons.Interop;
 using ECommons.LanguageHelpers;
 using ECommons.SimpleGui;

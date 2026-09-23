@@ -5,7 +5,6 @@ using Dalamud.Utility.Signatures;
 using ECommons.DalamudServices.Legacy;
 using ECommons.ExcelServices;
 using ECommons.GameHelpers;
-// using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using Splatoon.Modules;

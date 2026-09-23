@@ -429,8 +429,7 @@ public static unsafe class Utils
 
     public static GameObject* ResolvePronounBPO(string p)
     {
-        // porting-note: walk-back ECommons calls this FakePronoun, not ExtendedPronoun.
-        var ret = FakePronoun.Resolve(p);
+        var ret = ExtendedPronoun.Resolve(p);
         if(Svc.Condition[ConditionFlag.DutyRecorderPlayback] && BasePlayerOverride != "")
         {
             if(p == "<me>")
@@ -1189,7 +1188,7 @@ public static unsafe class Utils
         return false;
     }
 
-    public static bool IsInRange(this Dalamud.Game.ClientState.Statuses.Status buff, float min, float max) // TODO(api12): API15 had IStatus interface; API12 uses Dalamud.Game.ClientState.Statuses.Status class.
+    public static bool IsInRange(this Dalamud.Game.ClientState.Statuses.Status buff, float min, float max) // TODO(api13): IStatus is API15-only; api13 exposes the Status class.
     {
         if(buff.RemainingTime.InRange(min, max))
         {

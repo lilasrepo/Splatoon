@@ -51,7 +51,7 @@ internal static unsafe class Explorer
     internal static void DrawGameObject(IGameObject obj)
     {
         ImGuiEx.TextCopy($"VTable: {(nint)obj.Struct()->VirtualTable:X16} / {VTableClassifier.Classify(obj.Struct())}");
-        ImGuiEx.TextCopy($"Struct kind: {obj.Struct()->ObjectKind}/{obj.Struct()->SubKind}"); // porting-note: BattleNpcSubKind not in API12 FCS GameObject
+        ImGuiEx.TextCopy($"Struct kind: {obj.Struct()->ObjectKind}/{obj.Struct()->SubKind}/{obj.Struct()->BattleNpcSubKind}");
         ImGuiEx.TextCopy($"GOID: {obj.Struct()->GetGameObjectId().ObjectId}/{obj.Struct()->GetGameObjectId().Type}");
         ImGuiEx.TextCopy($"GameObject {obj}");
         ImGuiEx.TextCopy($"ObjectKind: {obj.ObjectKind}");

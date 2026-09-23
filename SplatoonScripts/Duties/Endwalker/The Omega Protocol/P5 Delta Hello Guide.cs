@@ -9,7 +9,7 @@ using ECommons.GameHelpers;
 using ECommons.Hooks.ActionEffectTypes;
 using ECommons.ImGuiMethods;
 using Player = ECommons.GameHelpers.LegacyPlayer.Player;
-// using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
+using ECommons.GameHelpers.LegacyPlayer;
 using ECommons.Logging;
 using ECommons.Schedulers;
 using Dalamud.Bindings.ImGui;

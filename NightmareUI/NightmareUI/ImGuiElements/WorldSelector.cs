@@ -70,7 +70,7 @@ public class WorldSelector
             regions[region] = [];
             foreach(var dc in Svc.Data.GetExcelSheet<WorldDCGroupType>()!)
             {
-                if(dc.Region == (byte)region) // TODO(api12): API15 Region became RowRef<>; API12 keeps it as byte
+                if(dc.Region == (byte)region) // porting-note(api13): WorldDCGroupType.Region is still a byte in api13 Lumina (RowRef<> from API15)
                 {
                     regions[region][dc.RowId] = [];
                     foreach(var world in ExcelWorldHelper.GetPublicWorlds(dc.RowId))

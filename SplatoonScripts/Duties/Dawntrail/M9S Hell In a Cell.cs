@@ -9,7 +9,7 @@ using Dalamud.Interface.Components;
 using ECommons;
 using ECommons.Configuration;
 using ECommons.DalamudServices;
-// using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
+using ECommons.GameHelpers.LegacyPlayer;
 using ECommons.ImGuiMethods;
 using Splatoon;
 using Splatoon.SplatoonScripting;

@@ -9,7 +9,7 @@ using ECommons.Hooks.ActionEffectTypes;
 using ECommons.Logging;
 using ECommons.PartyFunctions;
 using Player = ECommons.GameHelpers.LegacyPlayer.Player;
-// using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
+using ECommons.GameHelpers.LegacyPlayer;
 using FFXIVClientStructs.FFXIV.Client.UI.Info;
 using Dalamud.Bindings.ImGui;
 using Splatoon.SplatoonScripting;

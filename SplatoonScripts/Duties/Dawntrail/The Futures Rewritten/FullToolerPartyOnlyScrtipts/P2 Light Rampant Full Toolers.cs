@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Player = ECommons.GameHelpers.LegacyPlayer.Player;
-// using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
+using ECommons.GameHelpers.LegacyPlayer;
 
 using ECommons.DalamudServices.Legacy;
 

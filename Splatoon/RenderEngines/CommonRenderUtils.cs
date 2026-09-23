@@ -1,7 +1,7 @@
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.Collections;
-// using ECommons.CSExtensions; // TODO(api12): walk-back ECommons lacks CSExtensions namespace
+using ECommons.CSExtensions;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
@@ -32,7 +32,7 @@ public static unsafe class CommonRenderUtils
         {
             ret = ret.Replace("$OBJECTID", $"{go.EntityId.Format()}")
             .Replace("$DATAID", $"{go.DataId.Format()}")
-            // TODO(api12): GimmickId field renamed/removed in TC 7.1 game struct.
+            // TODO(api13): GameObject.GimmickId is not in CS 6966 (game 7.20).
             .Replace("$GIMMICKID", "")
             .Replace("$ESTATE", $"{go.Struct()->EventState.ToInt().Format()}")
             .Replace("$EVENTID", $"{go.Struct()->EventId.Id.ToInt().Format()}")
@@ -46,13 +46,13 @@ public static unsafe class CommonRenderUtils
             .Replace("$MSTATUS", $"{(*(int*)(go.Address + 0x104)).Format()}");
             if(go is IEventObj eobj)
             {
-                // TODO(api12): IEventObj.AnimationId is API15-only.
+                // TODO(api13): IEventObj.AnimationId is API15-only.
                 ret = ret
                 .Replace("$ANIMATIONID", "");
             }
             if(go.IsBattleChara(out var chr))
             {
-                // TODO(api12): IBattleChara.ModelId / .StatusLoop are API15-only.
+                // TODO(api13): IBattleChara.ModelId / .StatusLoop are API15-only.
                 ret = ret
                 .Replace("$MODELID", "")
                 .Replace("$NAMEID", $"{chr.NameId.Format()}")

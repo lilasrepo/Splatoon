@@ -22,7 +22,7 @@ public static class S
     internal static Projection Projection { get; private set; }
     internal static LogHooks LogHooks { get; private set; }
     internal static SystemLogProcessor SystemLogProcessor { get; private set; }
-    // internal static ObjectEffectProcessor ObjectEffectProcessor { get; private set; } // TODO(api12): processor disabled (game-7.5 hook signature)
+    // internal static ObjectEffectProcessor ObjectEffectProcessor { get; private set; } // TODO(api13): processor disabled (game-7.5 hook signature)
     internal static PinnedLayoutEdit PinnedLayoutEdit { get; private set; }
     internal static AliasManager AliasManager { get; private set; }
     internal static AttentionOverlayWindow AttentionOverlayWindow { get; private set; }

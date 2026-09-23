@@ -1,10 +1,9 @@
 using ECommons.GameHelpers.LegacyPlayer; // porting-note(api13): IPlayerCharacter.GetJob() lives here in ECommons 3.2.1.15
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.SubKinds;
-// using ECommons.CSExtensions; // TODO(api12): walk-back ECommons lacks CSExtensions namespace
+using ECommons.CSExtensions;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
-// using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
 using ECommons.MathHelpers;
 using Splatoon.Memory;
 using Splatoon.Structures;
@@ -106,7 +105,7 @@ public static unsafe class LayoutUtils
 
     public static bool CheckAnimationId(Element e, IEventObj eobj)
     {
-        // TODO(api12): IEventObj.AnimationId is API15-only. Always treat as "no match" so the AnimationId filter is a no-op.
+        // TODO(api13): IEventObj.AnimationId is API15-only. Always treat as "no match" so the AnimationId filter is a no-op.
         return false == !e.AnimationInverted;
     }
 

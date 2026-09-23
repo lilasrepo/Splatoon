@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-// using TerraFX.Interop.Windows; // TODO(api12): TerraFX not in API12 reference set
+// using TerraFX.Interop.Windows; // porting-note(api13): unused import; this csproj does not reference TerraFX
 
 namespace ECommons.IPC.Subscribers.CashFlow;
 

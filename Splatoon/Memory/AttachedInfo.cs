@@ -6,7 +6,6 @@ using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.GameFunctions.VirtualTableClassifier;
 using ECommons.GameHelpers;
-// using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using Lumina.Excel.Sheets;

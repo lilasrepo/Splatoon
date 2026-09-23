@@ -122,7 +122,7 @@ public unsafe class Splatoon : IDalamudPlugin
     internal static Dictionary<string, uint> NameNpcIDs = [];
     internal MapEffectProcessor mapEffectProcessor;
     internal TetherProcessor TetherProcessor;
-    // internal ObjectEffectProcessor ObjectEffectProcessor; // TODO(api12): processor disabled (game-7.5 hook signature)
+    // internal ObjectEffectProcessor ObjectEffectProcessor; // TODO(api13): processor disabled (game-7.5 hook signature)
     internal HttpClient HttpClient;
     internal PinnedElementEdit PinnedElementEditWindow;
     internal RenderableZoneSelector RenderableZoneSelector;
@@ -263,7 +263,7 @@ public unsafe class Splatoon : IDalamudPlugin
         SplatoonIPC.Init();
     }
 
-    // TODO(api12): IHandleableChatMessage overload is API15-only — disabled. The plain OnChatMessage(XivChatType, int, SeString, SeString) overload (further down) binds to API12 IChatGui.ChatMessage event.
+    // TODO(api13): IHandleableChatMessage overload is API15-only — disabled. The plain OnChatMessage(XivChatType, int, SeString, SeString) overload (further down) binds to the api13 IChatGui.ChatMessage event.
     // private void OnChatMessage(Dalamud.Game.Chat.IHandleableChatMessage message)
     // {
     //     this.OnChatMessage(message.Type, message.Timestamp, message.Sender, message.Message);

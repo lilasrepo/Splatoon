@@ -52,7 +52,8 @@ public static class NuiTools
                 bool ret;
                 if(b.Icon != default)
                 {
-                    ret = ImGuiEx.IconButtonWithText(b.Icon, b.Name); // TODO(api12): walk-back ECommons IconButtonWithText lacks size:/scaling: params
+                    // porting-note(api13): ECommons 3.2.1.15 takes size/scaling; the api12 walk-back did not.
+                    ret = ImGuiEx.IconButtonWithText(b.Icon, b.Name, size:new(w, ImGui.GetFrameHeight() * heightMultiplier), scaling:false);
                 }
                 else
                 {

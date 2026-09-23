@@ -1,4 +1,4 @@
-// using ECommons.CSExtensions; // TODO(api12): walk-back ECommons lacks CSExtensions namespace
+using ECommons.CSExtensions;
 using ECommons.Hooks;
 using FFXIVClientStructs.FFXIV.Client.Game.Event;
 using FFXIVClientStructs.FFXIV.Client.Game.InstanceContent;

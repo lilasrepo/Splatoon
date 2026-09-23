@@ -12,7 +12,6 @@ using Dalamud.Interface.Utility.Raii;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
-// using ECommons.GameHelpers.LegacyPlayer; // TODO(api12): walk-back ECommons lacks LegacyPlayer sub-namespace
 using ECommons.LanguageHelpers;
 using ECommons.MathHelpers;
 using Lumina.Excel;

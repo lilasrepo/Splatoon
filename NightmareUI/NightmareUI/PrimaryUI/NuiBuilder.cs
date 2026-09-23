@@ -191,13 +191,9 @@ public class NuiBuilder
         CurrentSection.Widgets.Add(new ImGuiWidget(this, name, (x) =>
         {
             ImGui.SetNextItemWidth(width);
-            // porting-note: api13's Dalamud.Bindings.ImGui takes maxLength as int, and the
-            // (uint) cast made overload resolution pick a Span<> overload whose buffer
-            // parameter is not by-ref. Dropping the cast selects InputText(ImU8String,
-            // ref string, int). The old TODO(api12) about RefStringDelegate is moot here —
-            // the by-ref string form is what api13 exposes.
-            var s = value() ?? "";
-            ImGui.InputText(name, ref s, maxLength);
+            // porting-note(api13): keep upstream's `ref value()`. The api12 port copied the value into a
+            // local and edited that, so the input never wrote back to the config.
+            ImGui.InputText(name, ref value(), maxLength);
         }, help));
         return this;
     }
@@ -208,9 +204,7 @@ public class NuiBuilder
         CurrentSection.Widgets.Add(new ImGuiWidget(this, name, (x) =>
         {
             ImGui.SetNextItemWidth(width);
-            // TODO(api12): API12 ImGui.NET InputFloat needs (string, ref float, step, step_fast, format).
-            var f = value();
-            ImGui.InputFloat(name, ref f, 0f, 0f, format ?? "%.3f");
+            ImGui.InputFloat(name, ref value(), 0f, 0f, format ?? "%.3f");
         }, help));
         return this;
     }
